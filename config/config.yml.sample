@@ -1,0 +1,9 @@
+:source_dir: <%=root%>/test/src
+:build_dir: <%=root%>/test/build
+:build_tasks: rake test
+:deploy_tasks:
+:email:
+  :contact:
+  :from:
+  :subject_prefx:
+  :smtp:
