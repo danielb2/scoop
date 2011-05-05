@@ -1,19 +1,20 @@
 module Scoop
-  # Your code goes here...
-  class Builder
-    def config
-      YAML.load_file((Scoop.root + 'config/config.yml').to_s)
-      root = Scoop.root
-      YAML::load(ERB.new( IO.read( (Scoop.root+'config/config.yml').to_s ) ).result(binding) )
+  @@options = {}
+  class << self
+    def []=(name,value)
+      @@options[name.to_sym] = value
     end
-
-    def run
-      run_build_tasks
-      run_deploy_tasks
+    def [](name)
+      @@options[name.to_sym]
+    end
+    def options
+      @@options
+    end
+    def root
+      Pathname.new File.realpath(File.join(File.dirname(__FILE__),'..'))
+    end
+    def create_config
     end
   end
-
-  def self.root
-    Pathname.new File.realpath(File.join(File.dirname(__FILE__),'..'))
-  end
+  self[:config_file] = (root + 'config/config.yml').to_s
 end

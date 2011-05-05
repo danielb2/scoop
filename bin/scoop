@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+$: << File.join(File.dirname(__FILE__),'..','lib')
+require 'environment'
+
+parser = OptionParser.new
+parser.banner = 'Usage: scoop [options]'
+parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|
+  Scoop[:config_file] = opt
+end
+parser.on("-c", "--create", "Create config file ready to use") do |opt|
+  Scoop.create_config
+  exit
+end
+parser.on("--debug", "If included run in DEBUG mode which sets log_level to :debug and logger to :st") do
+  Scoop[:log_level] = :debug
+  Scoop[:logger]    = "stdout"
+  Scoop[:daemonize] = false
+  Scoop[:no_loop]   = true
+  Scoop[:debug]     = true
+end
+parser.parse!
+p Scoop.options
