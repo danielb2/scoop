@@ -1,3 +1,4 @@
+:adapter: git
 :source_dir: <%=root%>/test/src
 :build_dir: <%=root%>/test/build
 :build_tasks: rake test

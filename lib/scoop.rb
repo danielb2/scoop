@@ -1,3 +1,5 @@
+require 'scoop/builder'
+require 'scoop/adapter/git' # TODO this should really be autoload. 
 module Scoop
   @@options = {}
   class << self
@@ -19,4 +21,5 @@ module Scoop
   end
   self[:config_file] = (root + 'config/config.yml').to_s
   self[:poll_interval] = 30
+  self[:pidfile] = "/var/run/scoop.pid"
 end

@@ -14,6 +14,9 @@ end
 parser.on("-p", "--poll_interval INT", "How frequrnt to poll the repo for changes. Default: #{Scoop[:poll_interval]}") do |opt|
   Scoop[:poll_interval] = opt
 end
+parser.on("-P", "--pidfile PATH", "Path to pid file. Default: #{Scoop[:pidfile]}") do |opt|
+  Scoop[:pidfile] = opt
+end
 parser.on("-h", "--help", "This help.") do |opt|
   puts parser.help
   exit
@@ -27,3 +30,6 @@ parser.on("--debug", "If included run in DEBUG mode which sets log_level to :deb
   Scoop[:debug]     = true
 end
 parser.parse!
+
+
+Scoop::Builder.new.run
