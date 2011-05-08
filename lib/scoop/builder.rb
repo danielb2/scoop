@@ -1,8 +1,13 @@
 module Scoop
   class Builder
-    attr_accessor :output, :config
+    attr_accessor :output, :config, :exec_status, :status
+    SUCCESS       = 1
+    FAILED_BUILD  = 2
+    FAILED_DEPLOY = 3
+
     def initialize
       @output = StringIO.new
+      @status = SUCESS
     end
 
     #version 
@@ -35,8 +40,12 @@ module Scoop
           next
         end
         debug "found update."
-        run_build_tasks
-        run_deploy_tasks
+        if run_build_tasks
+          if run_deploy_tasks
+          end
+        else
+        end
+        email_results
         sleep 1 # we don't want to eat cpu incase the update is wonky
       end
     end
@@ -49,11 +58,11 @@ module Scoop
 
     # also store result later for output to email
     def exec(cmd)
-      debug cmd
-      result = nil
+      debug "Executing: #{cmd}"
       Bundler.with_clean_env do
         Dir.chdir config[:build_dir] do
-          result = `#{cmd} 2>&1`
+          output << `#{cmd} 2>&1`
+          @exec_status = $?.exitstatus
         end
       end
       debug result.chomp
@@ -64,15 +73,30 @@ module Scoop
       logger.debug str if Scoop[:debug]
     end
 
-    # has there been an update in the repo we need to build for?
     def email_results
+    end
+    def email_subject
+      subject = status == SUCCESS ? 'SUCCESS: ' : 'FAILED: '
+      # note who made the latest build
+      # trimmed last commit message in subject
     end
 
     def run_build_tasks
-      exec config[:build_tasks]
+      output << exec config[:build_tasks]
+      if exec_status != 0
+        logger.warning "build tasks failed"
+        self.status = FAILED_BUILD
+        return false
+      end
+      return true
     end
+
     def run_deploy_tasks
-      exec config[:deploy_tasks]
+      result = exec config[:deploy_tasks]
+      if exec_status != 0
+        logger.warning "deploy tasks failed"
+        self.status = FAILED_DEPLOY
+      end
     end
   end
 end
