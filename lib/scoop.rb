@@ -20,6 +20,6 @@ module Scoop
     end
   end
   self[:config_file] = (root + 'config/config.yml').to_s
-  self[:poll_interval] = 30
+  # self[:poll_interval] = 30
   self[:pidfile] = "/var/run/scoop.pid"
 end

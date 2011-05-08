@@ -11,9 +11,9 @@ parser.on("-c", "--create", "Create config file ready to use") do |opt|
   Scoop.create_config
   exit
 end
-parser.on("-p", "--poll_interval INT", "How frequrnt to poll the repo for changes. Default: #{Scoop[:poll_interval]}") do |opt|
-  Scoop[:poll_interval] = opt
-end
+# parser.on("-p", "--poll_interval INT", "How frequrnt to poll the repo for changes. Default: #{Scoop[:poll_interval]}") do |opt|
+#   Scoop[:poll_interval] = opt
+# end
 parser.on("-P", "--pidfile PATH", "Path to pid file. Default: #{Scoop[:pidfile]}") do |opt|
   Scoop[:pidfile] = opt
 end
@@ -21,13 +21,13 @@ parser.on("-h", "--help", "This help.") do |opt|
   puts parser.help
   exit
 end
-
-parser.on("--debug", "If included run in DEBUG mode which sets log_level to :debug and logger to :st") do
+parser.on("-d", "--debug", "debug mode.") do
   Scoop[:log_level] = :debug
   Scoop[:logger]    = "stdout"
   Scoop[:daemonize] = false
   Scoop[:no_loop]   = true
   Scoop[:debug]     = true
+  puts "debug mode active".yellow
 end
 parser.parse!
 

@@ -7,7 +7,7 @@ module Scoop
 
     #version 
     def version_control
-      Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
+      Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new(config,logger)
       rescue NameError
         nil
     end
@@ -22,26 +22,50 @@ module Scoop
       Scoop[:config_file] || YAML.load_file((Scoop.root + 'config/config.yml').to_s)
     end
 
+    def logger
+      @logger ||= Logger.new(config[:logfile])
+    end
+
+
     def run
       loop do
-        if !update
-          sleep Scoop[:poll_interval]
+        if !update?
+          debug "no update found."
+          sleep config[:poll_interval]
           next
         end
+        debug "found update."
         run_build_tasks
         run_deploy_tasks
+        sleep 1 # we don't want to eat cpu incase the update is wonky
       end
     end
 
-    # has there been an update in the repo we need to build for?
-    def update
-    end
-    def email_results
+    def update?
+      result = exec(version_control.update_cmd)
+      return false if result =~ /up-to-date./
+      return true
     end
 
-    #let's just do plain system for now and improve this later
+    # also store result later for output to email
     def exec(cmd)
-      output << %x(cmd)
+      debug cmd
+      result = nil
+      Bundler.with_clean_env do
+        Dir.chdir config[:build_dir] do
+          result = `#{cmd} 2>&1`
+        end
+      end
+      debug result.chomp
+      return result
+    end
+
+    def debug(str)
+      logger.debug str if Scoop[:debug]
+    end
+
+    # has there been an update in the repo we need to build for?
+    def email_results
     end
 
     def run_build_tasks
