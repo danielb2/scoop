@@ -7,7 +7,8 @@ module Scoop
 
     def initialize
       @output = StringIO.new
-      @status = SUCESS
+      @status = SUCCESS
+      FileUtils.mkdir_p config[:build_dir]
     end
 
     #version 
@@ -51,6 +52,7 @@ module Scoop
     end
 
     def update?
+      exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
       result = exec(version_control.update_cmd)
       return false if result =~ /up-to-date./
       return true
@@ -59,9 +61,10 @@ module Scoop
     # also store result later for output to email
     def exec(cmd)
       debug "Executing: #{cmd}"
+      result = nil
       Bundler.with_clean_env do
         Dir.chdir config[:build_dir] do
-          output << `#{cmd} 2>&1`
+          result = `#{cmd} 2>&1`
           @exec_status = $?.exitstatus
         end
       end
@@ -82,7 +85,7 @@ module Scoop
     end
 
     def run_build_tasks
-      output << exec config[:build_tasks]
+      output << exec(config[:build_tasks])
       if exec_status != 0
         logger.warning "build tasks failed"
         self.status = FAILED_BUILD
@@ -92,7 +95,7 @@ module Scoop
     end
 
     def run_deploy_tasks
-      result = exec config[:deploy_tasks]
+      result = exec(config[:deploy_tasks])
       if exec_status != 0
         logger.warning "deploy tasks failed"
         self.status = FAILED_DEPLOY
