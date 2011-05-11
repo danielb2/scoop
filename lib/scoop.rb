@@ -18,6 +18,18 @@ module Scoop
     def create_config
       raise "not implemented"
     end
+    def config
+      return @config if @config
+      root = Scoop.root
+      @config = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
+    end
+
+    def config_file
+      Scoop[:config_file] || YAML.load_file((Scoop.root + 'config/config.yml').to_s)
+    end
+    def logger
+      @logger ||= Scoop[:debug] ? Logger.new($stdout) : Logger.new(config[:logfile])
+    end
   end
   self[:config_file] = (root + 'config/config.yml').to_s
   # self[:poll_interval] = 30

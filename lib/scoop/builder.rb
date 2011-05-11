@@ -8,28 +8,14 @@ module Scoop
     def initialize
       @output = StringIO.new
       @status = SUCCESS
-      FileUtils.mkdir_p config[:build_dir]
+      FileUtils.mkdir_p Scoop.config[:build_dir]
     end
 
     #version 
     def version_control
-      Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new(config,logger)
+      Scoop::Adapter.const_get(Scoop.config[:adapter].downcase.capitalize).new
       rescue NameError
         nil
-    end
-
-    def config
-      return @config if @config
-      root = Scoop.root
-      @config = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
-    end
-
-    def config_file
-      Scoop[:config_file] || YAML.load_file((Scoop.root + 'config/config.yml').to_s)
-    end
-
-    def logger
-      @logger ||= Logger.new(config[:logfile])
     end
 
 
@@ -37,7 +23,7 @@ module Scoop
       loop do
         if !update?
           debug "no update found."
-          sleep config[:poll_interval]
+          sleep Scoop.config[:poll_interval]
           next
         end
         debug "found update."
@@ -52,7 +38,7 @@ module Scoop
     end
 
     def update?
-      exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
+      exec("rsync -az --delete #{Scoop.config[:source_dir]}/ #{Scoop.config[:build_dir]}")
       result = exec(version_control.update_cmd)
       return false if result =~ /up-to-date./
       return true
@@ -63,7 +49,7 @@ module Scoop
       debug "Executing: #{cmd}"
       result = nil
       Bundler.with_clean_env do
-        Dir.chdir config[:build_dir] do
+        Dir.chdir Scoop.config[:build_dir] do
           result = `#{cmd} 2>&1`
           @exec_status = $?.exitstatus
         end
@@ -73,13 +59,20 @@ module Scoop
     end
 
     def debug(str)
-      logger.debug str if Scoop[:debug]
+      Scoop.logger.debug str if Scoop[:debug]
+    end
+
+    def email_subject
+      subject = status == SUCCESS ? 'SUCCESS: ' : 'FAILED: '
+      return subject
+      # note who made the latest build
+      # trimmed last commit message in subject
     end
 
     def email_results
       debug "emailing results"
 
-      settings = config[:email]
+      settings = Scoop.config[:email]
       smtp     = settings[:smtp]
 
       args = [smtp[:host], smtp[:port], smtp[:account],
@@ -90,25 +83,18 @@ module Scoop
       Mail.defaults do
         delivery_method :smtp_connection, { :connection => smtp_conn }
       end
-      mail = Mail.new do
-        to settings[:to]
-        from settings[:from]
-        subject 'test'
-        body 'testing sendmail'
-      end
+      mail = Mail.new
+      mail.to settings[:to]
+      mail.from settings[:from]
+      mail.subject email_subject
+      mail.body 'testing sendmail'
       mail.deliver!
       debug "email sent"
     end
-    def email_subject
-      subject = status == SUCCESS ? 'SUCCESS: ' : 'FAILED: '
-      # note who made the latest build
-      # trimmed last commit message in subject
-    end
-
     def run_build_tasks
-      output << exec(config[:build_tasks])
+      output << exec(Scoop.config[:build_tasks])
       if exec_status != 0
-        logger.warning "build tasks failed"
+        Scoop.logger.warning "build tasks failed"
         self.status = FAILED_BUILD
         return false
       end
@@ -116,9 +102,9 @@ module Scoop
     end
 
     def run_deploy_tasks
-      result = exec(config[:deploy_tasks])
+      result = exec(Scoop.config[:deploy_tasks])
       if exec_status != 0
-        logger.warning "deploy tasks failed"
+        Scoop.logger.warning "deploy tasks failed"
         self.status = FAILED_DEPLOY
       end
     end
