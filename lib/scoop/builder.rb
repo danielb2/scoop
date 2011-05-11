@@ -7,7 +7,8 @@ module Scoop
     FAILED_DEPLOY = 3
 
     def initialize
-      FileUtils.mkdir_p config[:build_dir]
+      # FileUtils.mkdir_p config[:build_dir]
+      exec("rsync -az #{config[:source_dir]}/ #{config[:build_dir]}") unless File.exists? config[:build_dir]
     end
 
     def version_control
@@ -35,13 +36,10 @@ module Scoop
           end
         else
         end
-        update_src if status == SUCCESS
+        version_control.update_src if status == SUCCESS
         email_results
         sleep 1 # we don't want to eat cpu incase the update is wonky
       end
-    end
-
-    def update_src
     end
 
     def debug(str)

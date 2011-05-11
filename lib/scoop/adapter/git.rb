@@ -19,7 +19,7 @@ module Scoop
       end
       def update_src
         logger.info 'updating source'
-        Dir.chdir config[:src_dir] do
+        Dir.chdir config[:source_dir] do
           exit_status, result = exec(update_cmd)
         end
       end
