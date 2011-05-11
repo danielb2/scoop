@@ -32,31 +32,23 @@ module Scoop
           end
         else
         end
+        update_src if status == SUCCESS
         email_results
         sleep 1 # we don't want to eat cpu incase the update is wonky
       end
     end
 
+    def update_src
+    end
     def update?
-      exec("rsync -az --delete #{Scoop.config[:source_dir]}/ #{Scoop.config[:build_dir]}")
-      result = exec(version_control.update_cmd)
-      return false if result =~ /up-to-date./
+      Dir.chdir Scoop.config[:build_dir] do
+        Scoop.exec("rsync -az --delete #{Scoop.config[:source_dir]}/ #{Scoop.config[:build_dir]}")
+        exit_status, result = Scoop.exec(version_control.update_cmd)
+        return false if result =~ /up-to-date./
+      end
       return true
     end
 
-    # also store result later for output to email
-    def exec(cmd)
-      debug "Executing: #{cmd}"
-      result = nil
-      Bundler.with_clean_env do
-        Dir.chdir Scoop.config[:build_dir] do
-          result = `#{cmd} 2>&1`
-          @exec_status = $?.exitstatus
-        end
-      end
-      debug result.chomp
-      return result
-    end
 
     def debug(str)
       Scoop.logger.debug str if Scoop[:debug]
@@ -92,9 +84,10 @@ module Scoop
       debug "email sent"
     end
     def run_build_tasks
-      output << exec(Scoop.config[:build_tasks])
+      exit_status, result = Scoop.exec(Scoop.config[:build_tasks])
+      output << result
       if exec_status != 0
-        Scoop.logger.warning "build tasks failed"
+        Scoop.logger.info "build tasks failed"
         self.status = FAILED_BUILD
         return false
       end
@@ -102,9 +95,9 @@ module Scoop
     end
 
     def run_deploy_tasks
-      result = exec(Scoop.config[:deploy_tasks])
+      exit_status, result = Scoop.exec(Scoop.config[:deploy_tasks])
       if exec_status != 0
-        Scoop.logger.warning "deploy tasks failed"
+        Scoop.logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY
       end
     end

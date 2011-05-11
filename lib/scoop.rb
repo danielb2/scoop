@@ -24,6 +24,20 @@ module Scoop
       @config = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
     end
 
+    def debug(str)
+      Scoop.logger.debug str if Scoop[:debug]
+    end
+
+    def exec(cmd)
+      debug "Executing: #{cmd}"
+      result = nil
+      Bundler.with_clean_env do
+        result = `#{cmd} 2>&1`
+      end
+      debug result.chomp
+      return $?.exitstatus, result
+    end
+
     def config_file
       Scoop[:config_file] || YAML.load_file((Scoop.root + 'config/config.yml').to_s)
     end
