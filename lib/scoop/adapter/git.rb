@@ -8,6 +8,22 @@ module Scoop
       end
       def last_committer
       end
+      def update_build
+        logger.info 'updating build'
+        Dir.chdir config[:build_dir] do
+          # exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
+          exit_status, result = exec(update_cmd)
+          return false if result =~ /up-to-date./
+        end
+        return true
+      end
+      def update_src
+        logger.info 'updating source'
+        Dir.chdir config[:src_dir] do
+          exit_status, result = exec(update_cmd)
+        end
+      end
+
       def update_cmd
         %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
       end

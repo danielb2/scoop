@@ -1,28 +1,30 @@
 module Scoop
   class Builder
     include Common
-    attr_accessor :output, :exec_status, :status
+    attr_accessor :output, :status
     SUCCESS       = 1
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
 
     def initialize
-      @output = StringIO.new
-      @status = SUCCESS
       FileUtils.mkdir_p config[:build_dir]
     end
 
-    #version 
     def version_control
       Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
       rescue NameError
         nil
     end
 
+    def reset
+      @status = SUCCESS
+      @output = ''
+    end
 
     def run
       loop do
-        if !update?
+        reset # reset all states
+        if !version_control.update_build
           debug "no update found."
           sleep config[:poll_interval]
           next
@@ -41,15 +43,6 @@ module Scoop
 
     def update_src
     end
-    def update?
-      Dir.chdir config[:build_dir] do
-        exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
-        exit_status, result = exec(version_control.update_cmd)
-        return false if result =~ /up-to-date./
-      end
-      return true
-    end
-
 
     def debug(str)
       logger.debug str if Scoop[:debug]
@@ -80,14 +73,14 @@ module Scoop
       mail.to settings[:to]
       mail.from settings[:from]
       mail.subject email_subject
-      mail.body 'testing sendmail'
+      mail.body 'testing sendmail' + output
       mail.deliver!
       debug "email sent"
     end
     def run_build_tasks
       exit_status, result = exec(config[:build_tasks])
       output << result
-      if exec_status != 0
+      if exit_status != 0
         logger.info "build tasks failed"
         self.status = FAILED_BUILD
         return false
@@ -97,7 +90,8 @@ module Scoop
 
     def run_deploy_tasks
       exit_status, result = exec(config[:deploy_tasks])
-      if exec_status != 0
+      output << result
+      if exit_status != 0
         logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY
       end
