@@ -2,6 +2,7 @@ require 'bundler'
 Bundler.setup
 require 'yaml'
 require 'pathname'
+require 'scoop/common'
 require 'scoop'
 require 'erb'
 require 'optparse'

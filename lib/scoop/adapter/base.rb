@@ -1,7 +1,7 @@
 module Scoop
   module Adapter
     class Base
-      attr_accessor :logger,:config
+      include Common
     end
   end
 end

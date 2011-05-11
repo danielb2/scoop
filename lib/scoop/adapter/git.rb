@@ -9,7 +9,7 @@ module Scoop
       def last_committer
       end
       def update_cmd
-        %|git pull #{Scoop.config[:git][:remote]} #{Scoop.config[:git][:branch]}|
+        %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
       end
     end
   end

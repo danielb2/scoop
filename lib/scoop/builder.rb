@@ -1,6 +1,7 @@
 module Scoop
   class Builder
-    attr_accessor :output, :config, :exec_status, :status
+    include Common
+    attr_accessor :output, :exec_status, :status
     SUCCESS       = 1
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
@@ -8,12 +9,12 @@ module Scoop
     def initialize
       @output = StringIO.new
       @status = SUCCESS
-      FileUtils.mkdir_p Scoop.config[:build_dir]
+      FileUtils.mkdir_p config[:build_dir]
     end
 
     #version 
     def version_control
-      Scoop::Adapter.const_get(Scoop.config[:adapter].downcase.capitalize).new
+      Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
       rescue NameError
         nil
     end
@@ -23,7 +24,7 @@ module Scoop
       loop do
         if !update?
           debug "no update found."
-          sleep Scoop.config[:poll_interval]
+          sleep config[:poll_interval]
           next
         end
         debug "found update."
@@ -41,9 +42,9 @@ module Scoop
     def update_src
     end
     def update?
-      Dir.chdir Scoop.config[:build_dir] do
-        Scoop.exec("rsync -az --delete #{Scoop.config[:source_dir]}/ #{Scoop.config[:build_dir]}")
-        exit_status, result = Scoop.exec(version_control.update_cmd)
+      Dir.chdir config[:build_dir] do
+        exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
+        exit_status, result = exec(version_control.update_cmd)
         return false if result =~ /up-to-date./
       end
       return true
@@ -51,7 +52,7 @@ module Scoop
 
 
     def debug(str)
-      Scoop.logger.debug str if Scoop[:debug]
+      logger.debug str if Scoop[:debug]
     end
 
     def email_subject
@@ -64,7 +65,7 @@ module Scoop
     def email_results
       debug "emailing results"
 
-      settings = Scoop.config[:email]
+      settings = config[:email]
       smtp     = settings[:smtp]
 
       args = [smtp[:host], smtp[:port], smtp[:account],
@@ -84,10 +85,10 @@ module Scoop
       debug "email sent"
     end
     def run_build_tasks
-      exit_status, result = Scoop.exec(Scoop.config[:build_tasks])
+      exit_status, result = exec(config[:build_tasks])
       output << result
       if exec_status != 0
-        Scoop.logger.info "build tasks failed"
+        logger.info "build tasks failed"
         self.status = FAILED_BUILD
         return false
       end
@@ -95,9 +96,9 @@ module Scoop
     end
 
     def run_deploy_tasks
-      exit_status, result = Scoop.exec(Scoop.config[:deploy_tasks])
+      exit_status, result = exec(config[:deploy_tasks])
       if exec_status != 0
-        Scoop.logger.info "deploy tasks failed"
+        logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY
       end
     end
