@@ -1,10 +1,20 @@
 :adapter: git
-:source_dir: <%=root%>/test/src
-:build_dir: <%=root%>/test/build
-:build_tasks: rake test
-:deploy_tasks:
+:git:
+  :branch: master
+  :remote: origin
+:source_dir: <%= Dir.pwd %>/src
+:build_dir: <%=root%>/build
+:build_tasks: echo build tasks
+:deploy_tasks: echo deploy
+:logfile: /var/log/scoop.log
+:poll_interval: 5
 :email:
-  :contact:
+  :to:
   :from:
-  :subject_prefx:
+  :subject_prefx: (Scoop)
   :smtp:
+    :password:
+    :account:
+    :host: smtp.gmail.com
+    :port: 587
+    :authentication: plain

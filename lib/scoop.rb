@@ -3,6 +3,7 @@ require 'scoop/adapter/git' # TODO this should really be autoload.
 module Scoop
   @@options = {}
   class << self
+    include Common
     def []=(name,value)
       @@options[name.to_sym] = value
     end
@@ -16,7 +17,8 @@ module Scoop
       Pathname.new File.realpath(File.join(File.dirname(__FILE__),'..'))
     end
     def create_config
-      raise "not implemented"
+      self[:config_file] = ( root + 'config/config.yml.sample' ).to_s
+      puts config.to_yaml
     end
 
   end
