@@ -7,7 +7,7 @@ parser.banner = 'Usage: scoop [options]'
 parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|
   Scoop[:config_file] = opt
 end
-parser.on("-c", "--create", "Create config file ready to use") do |opt|
+parser.on("-C", "--create", "Create config file ready to use") do |opt|
   Scoop.create_config
   exit
 end
