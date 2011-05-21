@@ -1,15 +1,27 @@
 require './test/helper'
 
+def conf
+  root = Scoop.root
+  config_file = (Scoop.root + 'config/config.yml.sample').to_s
+  conf = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
+  conf
+end
+
 describe Scoop do
   attr_accessor :builder
   before do
     @builder = Scoop::Builder.new
   end
   it "load config correct" do
-    builder.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
+    class Foo
+      include Scoop::Common
+    end
+    Foo.new.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
   end
   it "should run build tasks correct" do
-    builder.run_deploy_tasks
+    builder = Scoop::Builder.new
+    builder.stubs(:config).returns(conf)
+    ap builder.config
   end
   it "should run deploy tasks correct" do
   end
