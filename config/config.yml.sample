@@ -1,8 +1,8 @@
 :adapter: git
 :source_dir: <%=root%>/test/src
 :build_dir: <%=root%>/test/build
-:build_tasks: rake test
-:deploy_tasks:
+:build_tasks: echo a build task
+:deploy_tasks: echo a deploy task
 :email:
   :contact:
   :from:
