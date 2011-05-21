@@ -1,10 +1,15 @@
 require './test/helper'
 
 describe Scoop do
+  attr_accessor :builder
+  before do
+    @builder = Scoop::Builder.new
+  end
   it "load config correct" do
-    Scoop::Builder.new.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
+    builder.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
   end
   it "should run build tasks correct" do
+    builder.run_deploy_tasks
   end
   it "should run deploy tasks correct" do
   end

@@ -9,6 +9,7 @@ module Scoop
     def initialize
       # FileUtils.mkdir_p config[:build_dir]
       exec("rsync -az #{config[:source_dir]}/ #{config[:build_dir]}") unless File.exists? config[:build_dir]
+      reset
     end
 
     def version_control
