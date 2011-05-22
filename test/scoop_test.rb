@@ -31,4 +31,7 @@ describe Scoop do
   end
   it "should send fail email on deploy fail" do
   end
+  it "should send fail if version control to pull fails" do
+    # example, do git pull origin nonexistentrepo
+  end
 end

@@ -13,10 +13,7 @@ module Scoop
     end
     def exec(cmd)
       debug "Executing: #{cmd}"
-      result = nil
-      Bundler.with_clean_env do
-        result = `#{cmd} 2>&1`
-      end
+      result = `#{cmd} 2>&1`
       debug result.chomp
       return $?.exitstatus, result
     end
