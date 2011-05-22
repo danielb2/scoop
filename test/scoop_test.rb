@@ -34,4 +34,8 @@ describe Scoop do
   it "should send fail if version control to pull fails" do
     # example, do git pull origin nonexistentrepo
   end
+  it "should execute build tasks in build dir" do
+  end
+  it "should execute deploy tasks in deploy dir" do
+  end
 end

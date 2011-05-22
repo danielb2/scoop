@@ -77,7 +77,10 @@ module Scoop
       debug "email sent"
     end
     def run_build_tasks
-      exit_status, result = exec(config[:build_tasks])
+      exit_status, result = nil
+      Dir.chdir(config[:build_dir]) do
+        exit_status, result = exec(config[:build_tasks])
+      end
       output << result
       if exit_status != 0
         logger.info "build tasks failed"
@@ -88,7 +91,10 @@ module Scoop
     end
 
     def run_deploy_tasks
-      exit_status, result = exec(config[:deploy_tasks])
+      exit_status, result = nil
+      Dir.chdir(config[:source_dir]) do
+        exit_status, result = exec(config[:deploy_tasks])
+      end
       output << result
       if exit_status != 0
         logger.info "deploy tasks failed"
