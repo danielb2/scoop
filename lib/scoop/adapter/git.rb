@@ -24,6 +24,24 @@ module Scoop
         end
       end
 
+      def commit_revision
+        cmd = %{git log | head -1 | cut -d ' ' -f 2}
+        exit_status, result = exec(cmd)
+      end
+
+      def change?
+        Dir.chdir config[:source_dir] do
+          cmd = %{git fetch && git show-ref | grep develop | cut -d ' ' -f 1}
+          exit_status, result = exec(cmd)
+          current_rev, remote_rev = result.split("\n")
+          debug "current: #{current_rev} remote: #{remote_rev} last_tried: #{@last_tried_rev}"
+          return false if current_rev == remote_rev
+          return false if remote_rev == @last_tried_rev
+          @last_tried_rev = remote_rev
+        end
+        return true
+      end
+
       def update_cmd
         %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
       end

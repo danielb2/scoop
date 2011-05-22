@@ -7,13 +7,11 @@ module Scoop
     FAILED_DEPLOY = 3
 
     def initialize
-      # FileUtils.mkdir_p config[:build_dir]
-      exec("rsync -az #{config[:source_dir]}/ #{config[:build_dir]}") unless File.exists? config[:build_dir]
       reset
     end
 
     def version_control
-      Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
+      @version_control ||= Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
       rescue NameError
         nil
     end
@@ -23,11 +21,16 @@ module Scoop
       @output = ''
     end
 
+    def prepare_build
+      exec("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
+      version_control.update_build
+    end
+
     def run
       loop do
         reset # reset all states
-        if !version_control.update_build
-          debug "no update found."
+        if !version_control.change?
+          debug "no change found."
           sleep config[:poll_interval]
           next
         end
@@ -48,13 +51,25 @@ module Scoop
     end
 
     def email_subject
-      subject = status == SUCCESS ? 'SUCCESS: ' : 'FAILED: '
+      subject = ''
+      case status
+      when SUCCESS
+        subject = 'SUCCESS: '
+      when FAILED_BUILD
+        subject = 'FAILED BUILD: '
+      when FAILED_DEPLOY
+        subject = 'FAILED DEPLOY: '
+      else
+        subject = 'UKNOWN FAILURE: '
+      end
       return subject
       # note who made the latest build
       # trimmed last commit message in subject
     end
 
     def email_results
+      debug 'skipping email'
+      return nil
       debug "emailing results"
 
       settings = config[:email]
@@ -72,16 +87,20 @@ module Scoop
       mail.to settings[:to]
       mail.from settings[:from]
       mail.subject email_subject
-      mail.body 'testing sendmail' + output
+      mail.body output
       mail.deliver!
       debug "email sent"
     end
     def run_build_tasks
+      prepare_build
       exit_status, result = nil
       Dir.chdir(config[:build_dir]) do
         exit_status, result = exec(config[:build_tasks])
       end
+      output << '==== Build tasks '.ljust(80,'=') + "\n"
+      output << '= ' + config[:build_tasks] + "\n"
       output << result
+      output << ''.ljust(80,'=') + "\n"
       if exit_status != 0
         logger.info "build tasks failed"
         self.status = FAILED_BUILD
@@ -91,6 +110,7 @@ module Scoop
     end
 
     def run_deploy_tasks
+      version_control.update_src
       exit_status, result = nil
       Dir.chdir(config[:source_dir]) do
         exit_status, result = exec(config[:deploy_tasks])
