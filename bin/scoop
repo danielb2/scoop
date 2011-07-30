@@ -2,6 +2,19 @@
 $: << File.join(File.dirname(__FILE__),'..','lib')
 require 'environment'
 
+Signal.trap("INT") { signal_trap }
+$trap_time = Time.now
+def signal_trap
+  if Time.now - $trap_time < 2
+    puts "Caught rapid signal. Quitting forcefully."
+    exit
+  end
+  puts "Caught signal. Attempting to quit gracefully. Signal twice to quit immediately."
+  $trap_time = Time.now
+  $term_received = true
+end
+
+
 parser = OptionParser.new
 parser.banner = 'Usage: scoop [options]'
 parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|

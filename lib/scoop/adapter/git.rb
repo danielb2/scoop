@@ -31,7 +31,7 @@ module Scoop
 
       def change?
         Dir.chdir config[:source_dir] do
-          cmd = %{git fetch && git rev-parse --verify HEAD}
+          cmd = %{git fetch #{config[:git][:remote]} #{config[:git][:branch]} && git rev-parse --verify HEAD}
           exit_status, result = exec(cmd)
           current_rev, remote_rev = result.split("\n")
           debug "current: #{current_rev} remote: #{remote_rev} last_tried: #{@last_tried_rev}"

@@ -32,6 +32,7 @@ module Scoop
         if !version_control.change?
           debug "no change found."
           sleep config[:poll_interval]
+          exit if $term_received
           next
         end
         debug "found update."
