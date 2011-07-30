@@ -2,3 +2,4 @@ pkg/*
 *.gem
 .bundle
 config/config.yml
+tmp
