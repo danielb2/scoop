@@ -10,7 +10,7 @@ end
 describe Scoop do
   attr_accessor :builder
   before do
-    @builder = Scoop::Builder.new
+    @builder = Scoop::Builder.new(conf)
   end
   it "load config correct" do
     pending
@@ -44,6 +44,11 @@ describe Scoop do
   it "should execute deploy tasks in deploy dir" do
     pending
   end
-  it "should run build tasks on adapter notification of repo change"
+  it "should run build tasks on adapter notification of repo change" do
+    pending
+    builder = Scoop::Builder.new(conf)
+    builder.run
+    builder.expects(:run_build_tasks).once
+  end
   it "should run deploy tasks on successful build"
 end

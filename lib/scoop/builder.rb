@@ -6,7 +6,7 @@ module Scoop
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
 
-    def initialize
+    def initialize(config)
       reset
     end
 
