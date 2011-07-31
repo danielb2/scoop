@@ -8,3 +8,6 @@ require 'logger'
 require 'awesome_print'
 require 'net/smtp'
 require 'mail'
+require 'cattr'
+
+require 'app'
