@@ -2,13 +2,14 @@ PATH
   remote: .
   specs:
     scoop (0.0.1)
+      awesome_print
       cattr
       mail
 
 GEM
   remote: http://rubygems.org/
   specs:
-    awesome_print (0.3.2)
+    awesome_print (0.4.0)
     cattr (0.1.2)
     coderay (0.9.8)
     diff-lcs (1.1.2)
@@ -20,7 +21,6 @@ GEM
     method_source (0.4.1)
       ruby_parser (>= 2.0.5)
     mime-types (1.16)
-    mocha (0.9.12)
     polyglot (0.3.2)
     pry (0.8.3)
       coderay (>= 0.9.7)
@@ -47,9 +47,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print
   bundler (>= 1.0.0)
-  mocha
   pry
   rspec
   scoop!

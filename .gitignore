@@ -3,3 +3,4 @@ pkg/*
 .bundle
 config/config.yml
 tmp
+scoop.log

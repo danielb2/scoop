@@ -24,8 +24,21 @@ module Scoop
         end
       end
 
+      def differ?
+        local_commit and remote_commit
+      end
       def commit_revision
         cmd = %{git log | head -1 | cut -d ' ' -f 2}
+        exit_status, result = exec(cmd)
+      end
+      def remote_commit
+        cmd = %(git ls-remote #{config[:git][:remote]} #{config[:git][:branch]} | awk '{print $1}')
+        exit_status, result = exec(cmd)
+      end
+      def local_commit
+        # cmd = %{git show HEAD --pretty='%H' | head -1}
+        # cmd = %{git rev-list HEAD | head -1}
+        cmd = %{git rev-list HEAD --max-count 1}
         exit_status, result = exec(cmd)
       end
 

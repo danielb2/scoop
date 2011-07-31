@@ -4,6 +4,7 @@ def conf
   root = Scoop.root
   config_file = (Scoop.root + 'config/config.yml.sample').to_s
   conf = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
+  conf[:poll_interval] = 0.01
   conf
 end
 
@@ -44,11 +45,44 @@ describe Scoop do
   it "should execute deploy tasks in deploy dir" do
     pending
   end
+  let (:base_adapter) do
+    o = Object.new
+    def o.change?
+      true
+    end
+    def o.update_build
+    end
+    def o.update_src
+    end
+    o
+  end
   it "should run build tasks on adapter notification of repo change" do
     pending
     builder = Scoop::Builder.new(conf)
+    builder.adapter = base_adapter
     builder.run
     builder.expects(:run_build_tasks).once
+  end
+  it "shouldn't do anything if there's no change" do
+    builder = Scoop::Builder.new(conf)
+    adapter = base_adapter
+    def adapter.change?
+      false
+    end
+    builder.adapter = base_adapter
+    builder.should_receive(:run_build_tasks).never
+    builder.run once: true
+  end
+  it "shouldn't run deploy tasks if build_tasks failed" do
+    cfg = conf
+    cfg[:build_tasks] = 'ls /sdocksd'
+    builder = Scoop::Builder.new(cfg)
+    FileUtils.mkdir_p conf[:build_dir]
+    FileUtils.mkdir_p conf[:source_dir]
+    builder.adapter = base_adapter
+    builder.should_receive(:run_build_tasks).once
+    builder.should_receive(:run_deploy_tasks).never
+    builder.run once: true
   end
   it "should run deploy tasks on successful build"
 end

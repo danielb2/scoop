@@ -1,19 +1,24 @@
 module Scoop
   class Builder
     include Common
-    attr_accessor :output, :status
+    attr_accessor :output, :status, :adapter
     SUCCESS       = 1
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
 
     def initialize(config)
+      App.conf = config
       reset
+      set_adapter
     end
-
-    def version_control
+    def set_adapter
       @version_control ||= Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
       rescue NameError
         nil
+    end
+
+    def version_control
+      adapter
     end
 
     def reset
@@ -26,8 +31,8 @@ module Scoop
       version_control.update_build
     end
 
-    def run
-      loop do
+    def run(opts={once: false})
+      begin
         reset # reset all states
         if !version_control.change?
           debug "no change found."
@@ -44,7 +49,7 @@ module Scoop
         version_control.update_src if status == SUCCESS
         email_results
         sleep 1 # we don't want to eat cpu incase the update is wonky
-      end
+      end while opts[:once] == false
     end
 
     def debug(str)

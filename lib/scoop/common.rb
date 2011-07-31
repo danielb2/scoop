@@ -1,9 +1,7 @@
 module Scoop
   module Common
     def config
-      return @config if @config
-      root = Scoop.root
-      @config = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
+      App.conf
     end
     def logger
       @logger ||= Scoop[:debug] ? Logger.new($stdout) : Logger.new(config[:logfile])

@@ -6,7 +6,7 @@
 :build_dir: <%=root%>/build
 :build_tasks: echo build tasks
 :deploy_tasks: echo deploy
-:logfile: /var/log/scoop.log
+:logfile: <%=root%>//scoop.log
 :poll_interval: 5
 :email:
   :to:

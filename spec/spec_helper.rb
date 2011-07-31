@@ -2,4 +2,6 @@ require 'bundler'
 Bundler.setup
 require 'environment'
 require 'awesome_print'
-require 'mocha'
+require "rspec/mocks/standalone"
+require 'pry'
+require 'fileutils'
