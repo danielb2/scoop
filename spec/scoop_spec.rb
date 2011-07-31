@@ -13,6 +13,7 @@ describe Scoop do
     @builder = Scoop::Builder.new
   end
   it "load config correct" do
+    pending
     class Foo
       include Scoop::Common
     end
