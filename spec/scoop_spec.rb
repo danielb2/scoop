@@ -23,19 +23,25 @@ describe Scoop do
     builder.stubs(:config).returns(conf)
     ap builder.config
   end
-  it "should run deploy tasks correct" do
-  end
   it "should send success email on success" do
+    pending
   end
   it "should send fail email on build fail" do
+    pending
   end
   it "should send fail email on deploy fail" do
+    pending
   end
   it "should send fail if version control to pull fails" do
+    pending
     # example, do git pull origin nonexistentrepo
   end
   it "should execute build tasks in build dir" do
+    pending
   end
   it "should execute deploy tasks in deploy dir" do
+    pending
   end
+  it "should run build tasks on adapter notification of repo change"
+  it "should run deploy tasks on successful build"
 end
