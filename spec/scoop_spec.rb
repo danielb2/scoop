@@ -1,4 +1,4 @@
-require './test/helper'
+require File.dirname(__FILE__) + '/spec_helper'
 
 def conf
   root = Scoop.root
