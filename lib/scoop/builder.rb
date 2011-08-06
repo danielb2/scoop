@@ -9,16 +9,7 @@ module Scoop
     def initialize(config)
       App.conf = config
       reset
-      set_adapter
-    end
-    def set_adapter
-      @version_control ||= Scoop::Adapter.const_get(config[:adapter].downcase.capitalize).new
-      rescue NameError
-        nil
-    end
-
-    def version_control
-      adapter
+      @adapter = App.adapter
     end
 
     def reset
@@ -28,13 +19,13 @@ module Scoop
 
     def prepare_build
       exec("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
-      version_control.update_build
+      adapter.update_build
     end
 
     def run(opts={once: false})
       begin
         reset # reset all states
-        if !version_control.change?
+        if !adapter.change?
           debug "no change found."
           sleep config[:poll_interval]
           exit if $term_received
@@ -46,7 +37,7 @@ module Scoop
           end
         else
         end
-        version_control.update_src if status == SUCCESS
+        adapter.update_src if status == SUCCESS
         email_results
         sleep 1 # we don't want to eat cpu incase the update is wonky
       end while opts[:once] == false
@@ -116,7 +107,7 @@ module Scoop
     end
 
     def run_deploy_tasks
-      version_control.update_src
+      adapter.update_src
       exit_status, result = nil
       Dir.chdir(config[:source_dir]) do
         exit_status, result = exec(config[:deploy_tasks])
