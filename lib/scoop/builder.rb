@@ -92,7 +92,7 @@ module Scoop
       prepare_build
       exit_status, result = nil
       Dir.chdir(config[:build_dir]) do
-        exit_status, self.build_output = exec(config[:build_tasks])
+        self.build_output = exec(config[:build_tasks])
       end
       output << '==== Build tasks '.ljust(80,'=') + "\n"
       output << '= ' + config[:build_tasks] + "\n"
@@ -110,7 +110,7 @@ module Scoop
       adapter.update_src
       exit_status, result = nil
       Dir.chdir(config[:source_dir]) do
-        exit_status, self.deploy_output = exec(config[:deploy_tasks])
+        self.deploy_output = exec(config[:deploy_tasks])
       end
       output << self.deploy_output
       if exit_status != 0
