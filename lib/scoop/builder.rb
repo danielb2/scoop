@@ -1,7 +1,7 @@
 module Scoop
   class Builder
     include Common
-    attr_accessor :output, :status, :adapter, :build_output
+    attr_accessor :output, :status, :adapter, :build_output, :deploy_output
     SUCCESS       = 1
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
@@ -110,9 +110,9 @@ module Scoop
       adapter.update_src
       exit_status, result = nil
       Dir.chdir(config[:source_dir]) do
-        exit_status, result = exec(config[:deploy_tasks])
+        exit_status, self.deploy_output = exec(config[:deploy_tasks])
       end
-      output << result
+      output << self.deploy_output
       if exit_status != 0
         logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY

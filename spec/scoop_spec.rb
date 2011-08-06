@@ -25,6 +25,11 @@ describe Scoop do
     builder.run_build_tasks
     builder.build_output.should == "my build tasks\n"
   end
+  it "should run deploy tasks correct" do
+    builder = Scoop::Builder.new(conf)
+    builder.run_deploy_tasks
+    builder.deploy_output.should == "deploy\n"
+  end
   it "should send success email on success" do
     pending
   end
