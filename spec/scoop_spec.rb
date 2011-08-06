@@ -21,10 +21,9 @@ describe Scoop do
     Foo.new.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
   end
   it "should run build tasks correct" do
-    pending
-    builder = Scoop::Builder.new
-    builder.stubs(:config).returns(conf)
-    ap builder.config
+    builder = Scoop::Builder.new(conf)
+    builder.run_build_tasks
+    builder.build_output.should == "my build tasks\n"
   end
   it "should send success email on success" do
     pending

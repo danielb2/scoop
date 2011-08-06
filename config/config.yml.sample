@@ -4,7 +4,7 @@
   :remote: origin
 :source_dir: <%= Dir.pwd %>/src
 :build_dir: <%=root%>/build
-:build_tasks: echo build tasks
+:build_tasks: echo my build tasks
 :deploy_tasks: echo deploy
 :logfile: <%=root%>//scoop.log
 :poll_interval: 5

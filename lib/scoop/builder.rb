@@ -1,7 +1,7 @@
 module Scoop
   class Builder
     include Common
-    attr_accessor :output, :status, :adapter
+    attr_accessor :output, :status, :adapter, :build_output
     SUCCESS       = 1
     FAILED_BUILD  = 2
     FAILED_DEPLOY = 3
@@ -92,11 +92,11 @@ module Scoop
       prepare_build
       exit_status, result = nil
       Dir.chdir(config[:build_dir]) do
-        exit_status, result = exec(config[:build_tasks])
+        exit_status, self.build_output = exec(config[:build_tasks])
       end
       output << '==== Build tasks '.ljust(80,'=') + "\n"
       output << '= ' + config[:build_tasks] + "\n"
-      output << result
+      output << self.build_output
       output << ''.ljust(80,'=') + "\n"
       if exit_status != 0
         logger.info "build tasks failed"
