@@ -1,13 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-def conf
-  root = Scoop.root
-  config_file = (Scoop.root + 'config/config.yml.sample').to_s
-  conf = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
-  conf[:poll_interval] = 0.01
-  conf
-end
-
 describe Scoop do
   attr_accessor :builder
   before do

@@ -28,6 +28,7 @@ module Scoop
     def exec(cmd)
       result = ''
       process_status = nil
+      puts cmd
       Open3.popen3("#{cmd} 2>&1") do |stdin, stdout, stderr, wait_thr|
         begin
           while line = stdout.sysread(15)
