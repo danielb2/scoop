@@ -17,6 +17,9 @@ end
 
 parser = OptionParser.new
 parser.banner = 'Usage: scoop [options]'
+parser.on("--no-mail", "Don't send mail") do |opt|
+  App.no_mail = true
+end
 parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|
   App.cfg_file = opt
   App.load_conf opt

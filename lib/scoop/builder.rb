@@ -87,6 +87,7 @@ module Scoop
     end
 
     def email_results
+      return if App.no_mail
       build_email.deliver!
     end
 
