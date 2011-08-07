@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Scoop do
   before do
     Mail::Message.any_instance.stub(:deliver!) {nil}
+    App.once = true
   end
   let(:builder) { Scoop::Builder.new(conf) }
   it "load config correct" do
@@ -47,7 +48,7 @@ describe Scoop do
     builder = Scoop::Builder.new(conf)
     builder.adapter = base_adapter
     builder.run
-    builder.expects(:run_build_tasks).once
+    builder.expects(:run_build_tasks).unce
   end
   it "shouldn't do anything if there's no change" do
     adapter = base_adapter
@@ -56,7 +57,7 @@ describe Scoop do
     end
     builder.adapter = base_adapter
     builder.should_receive(:run_build_tasks).never
-    builder.run once: true
+    builder.run
   end
   it "shouldn't run deploy tasks if build_tasks failed" do
     cfg = conf
@@ -67,7 +68,7 @@ describe Scoop do
     builder.adapter = base_adapter
     builder.should_receive(:run_build_tasks).once
     builder.should_receive(:run_deploy_tasks).never
-    builder.run once: true
+    builder.run
   end
   it "should run deploy tasks on successful build" do
     cfg = conf
@@ -77,7 +78,7 @@ describe Scoop do
     builder.stub(:run_build_tasks) { true }
     builder.stub(:update_src) {nil}
     builder.stub(:email_results) {nil}
-    builder.run once: true
+    builder.run
     builder.deploy_output.should == "fun\n"
   end
 end

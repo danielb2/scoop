@@ -4,6 +4,7 @@ module Scoop
       include Common
 
       def differ?
+        return true if App.force
         local_revision != remote_revision
       end
       alias :change? :differ?
