@@ -119,7 +119,7 @@ module Scoop
       return true
       rescue ExecError => e
         logger.info "build tasks failed"
-        self.status = FAILED_BUILD
+        self.status = FAILED_DEPLOY
         output << e.output
         return false
     end
