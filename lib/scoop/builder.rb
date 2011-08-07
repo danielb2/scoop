@@ -94,18 +94,17 @@ module Scoop
 
     def run_build_tasks
       prepare_build
-      exit_status, result = nil
+      output << '==== Build tasks '.ljust(80,'=') + "\n"
+      output << '= ' + config[:build_tasks] + "\n"
       Dir.chdir(config[:build_dir]) do
         self.build_output = shell(config[:build_tasks])
       end
-      output << '==== Build tasks '.ljust(80,'=') + "\n"
-      output << '= ' + config[:build_tasks] + "\n"
       output << self.build_output
-      output << ''.ljust(80,'=') + "\n"
       return true
-      rescue ExecError
+      rescue ExecError => e
         logger.info "build tasks failed"
         self.status = FAILED_BUILD
+        output << e.output
         return false
     end
 

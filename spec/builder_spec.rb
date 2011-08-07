@@ -18,4 +18,6 @@ describe Scoop::Builder do
       builder.deploy_output.should == "deploy\n"
     end
   end
+
+  it "should include build message for failed build"
 end
