@@ -9,5 +9,6 @@ require 'awesome_print'
 require 'net/smtp'
 require 'mail'
 require 'cattr'
+require 'open3'
 
 require 'app'

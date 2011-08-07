@@ -32,6 +32,12 @@ module GitSpecHelper
       exec "git clone #{origin_dir} #{src_dir}"
     end
   end
+  def mod_git_origin
+    Dir.chdir origin_dir do
+      exec "ls > file.txt"
+      exec "git commit -a -m 'second commit'"
+    end
+  end
   def exec(cmd)
     puts "==> #{cmd}"
     puts `#{cmd}`.split("\n").map { |l| ' +' + l }
@@ -50,9 +56,9 @@ describe Scoop::Adapter::Git do
     adapter.differ?.should == false
   end
   it "should detect change" do
-    pending
     adapter = Scoop::Adapter::Git.new
     config = conf.update source_dir: GitSpecHelper.src_dir
+    GitSpecHelper.mod_git_origin
     adapter.stub(:config) { config }
     adapter.differ?.should == true
   end
