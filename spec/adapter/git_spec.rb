@@ -41,11 +41,13 @@ module GitSpecHelper
       exec "git commit -a -m 'second commit'"
     end
   end
+end
   def exec(cmd)
+    `#{cmd}`
+    return
     puts "==> #{cmd}"
     puts `#{cmd}`.split("\n").map { |l| ' +' + l }
   end
-end
 
 describe Scoop::Adapter::Git do
   before do
@@ -69,7 +71,6 @@ describe Scoop::Adapter::Git do
     it "should not have updated build dir" do
       adapter = Scoop::Adapter::Git.new
       config = conf.merge source_dir: GitSpecHelper.src_dir
-      GitSpecHelper.mod_git_origin
       adapter.stub(:config) { config }
       exec("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
       adapter.update_build.should == false
