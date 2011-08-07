@@ -49,16 +49,16 @@ module Scoop
     end
 
     def email_subject
-      subject = ''
+      subject = config[:email][:subject_prefix] + ' '
       case status
       when SUCCESS
-        subject = 'SUCCESS: '
+        subject += 'SUCCESS: '
       when FAILED_BUILD
-        subject = 'FAILED BUILD: '
+        subject += 'FAILED BUILD: '
       when FAILED_DEPLOY
-        subject = 'FAILED DEPLOY: '
+        subject += 'FAILED DEPLOY: '
       else
-        subject = 'UKNOWN FAILURE: '
+        subject += 'UKNOWN FAILURE: '
       end
       return subject
       # note who made the latest build
