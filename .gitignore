@@ -4,3 +4,4 @@ pkg/*
 config/config.yml
 tmp
 scoop.log
+coverage

@@ -38,6 +38,9 @@ GEM
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
     sexp_processor (3.0.5)
+    simplecov (0.4.2)
+      simplecov-html (~> 0.4.4)
+    simplecov-html (0.4.5)
     slop (1.6.0)
     treetop (1.4.10)
       polyglot
@@ -51,3 +54,4 @@ DEPENDENCIES
   pry
   rspec
   scoop!
+  simplecov
