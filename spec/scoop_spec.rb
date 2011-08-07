@@ -80,5 +80,15 @@ describe Scoop do
     builder.should_receive(:run_deploy_tasks).never
     builder.run once: true
   end
-  it "should run deploy tasks on successful build"
+  it "should run deploy tasks on successful build" do
+    cfg = conf
+    cfg[:deploy_tasks] = 'echo fun'
+    Scoop::Adapter::Git.any_instance.stub(:change?) { true }
+    builder = Scoop::Builder.new(cfg)
+    builder.stub(:run_build_tasks) { true }
+    builder.stub(:update_src) {nil}
+    builder.stub(:update_src) {email_results}
+    builder.run once: true
+    builder.deploy_output.should == "fun\n"
+  end
 end

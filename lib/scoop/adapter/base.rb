@@ -6,6 +6,8 @@ module Scoop
       def differ?
         local_revision != remote_revision
       end
+      alias :change? :differ?
+
       def local_revision
         raise "must implement for adapter"
       end

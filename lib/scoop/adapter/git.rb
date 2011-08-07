@@ -38,19 +38,6 @@ module Scoop
         end
       end
 
-      def change?
-        Dir.chdir config[:source_dir] do
-          cmd = %{git fetch #{config[:git][:remote]} #{config[:git][:branch]} && git rev-parse --verify HEAD}
-          exit_status, result = exec(cmd)
-          current_rev, remote_rev = result.split("\n")
-          debug "current: #{current_rev} remote: #{remote_rev} last_tried: #{@last_tried_rev}"
-          return false if current_rev == remote_rev
-          return false if remote_rev == @last_tried_rev
-          @last_tried_rev = remote_rev
-        end
-        return true
-      end
-
       def update_cmd
         %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
       end
