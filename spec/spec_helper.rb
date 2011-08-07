@@ -14,9 +14,6 @@ def conf
   conf
 end
 
-
-def init_build_dir(conf)
-end
-
-def init_deploy_dir(conf)
+def clean_tmp
+  FileUtils.rm_rf App.root + '/spec/tmp'
 end

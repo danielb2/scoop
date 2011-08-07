@@ -25,14 +25,18 @@ module Scoop
         exit_status, result = exec(cmd)
       end
       def remote_revision
-        cmd = %(git ls-remote #{config[:git][:remote]} #{config[:git][:branch]} | awk '{print $1}')
-        exit_status, result = exec(cmd)
+        Dir.chdir config[:source_dir] do
+          cmd = %(git ls-remote #{config[:git][:remote]} #{config[:git][:branch]} | awk '{print $1}')
+          exec(cmd)
+        end
       end
       def local_revision
-        # cmd = %{git show HEAD --pretty='%H' | head -1}
-        # cmd = %{git rev-list HEAD | head -1}
-        cmd = %{git rev-list HEAD --max-count 1}
-        exit_status, result = exec(cmd)
+        Dir.chdir config[:source_dir] do
+          # cmd = %{git show HEAD --pretty='%H' | head -1}
+          # cmd = %{git rev-list HEAD | head -1}
+          cmd = %{git rev-list HEAD --max-count 1}
+          exit_status, result = exec(cmd)
+        end
       end
 
       def change?
