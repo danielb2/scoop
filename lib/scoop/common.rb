@@ -9,12 +9,6 @@ module Scoop
     def debug(str)
       logger.debug str if Scoop[:debug]
     end
-    def exec_old(cmd)
-      debug "Executing: #{cmd}"
-      result = `#{cmd} 2>&1`
-      debug result.chomp
-      return $?.exitstatus, result
-    end
 
     class ExecError < Exception
       attr_reader :cmd, :status, :output
