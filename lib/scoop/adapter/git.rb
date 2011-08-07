@@ -7,7 +7,7 @@ module Scoop
       def update_build
         logger.info 'updating build'
         Dir.chdir config[:build_dir] do
-          result = exec(update_cmd)
+          result = shell(update_cmd)
           return false if result =~ /up-to-date./
         end
         return true
@@ -15,18 +15,18 @@ module Scoop
       def update_src
         logger.info 'updating source'
         Dir.chdir config[:source_dir] do
-          result = exec(update_cmd)
+          result = shell(update_cmd)
         end
       end
 
       def commit_revision
         cmd = %{git log | head -1 | cut -d ' ' -f 2}
-        exit_status, result = exec(cmd)
+        exit_status, result = shell(cmd)
       end
       def remote_revision
         Dir.chdir config[:source_dir] do
           cmd = %(git ls-remote #{config[:git][:remote]} #{config[:git][:branch]} | awk '{print $1}')
-          exec(cmd)
+          shell(cmd)
         end
       end
       def local_revision
@@ -34,7 +34,7 @@ module Scoop
           # cmd = %{git show HEAD --pretty='%H' | head -1}
           # cmd = %{git rev-list HEAD | head -1}
           cmd = %{git rev-list HEAD --max-count 1}
-          exec(cmd)
+          shell(cmd)
         end
       end
 

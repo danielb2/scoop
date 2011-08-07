@@ -19,7 +19,7 @@ module Scoop
       end
     end
 
-    def exec(cmd)
+    def shell(cmd)
       result = ''
       process_status = nil
       puts cmd

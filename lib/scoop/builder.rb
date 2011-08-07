@@ -18,7 +18,7 @@ module Scoop
     end
 
     def prepare_build
-      exec("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
+      shell("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
       adapter.update_build
     end
 
@@ -96,7 +96,7 @@ module Scoop
       prepare_build
       exit_status, result = nil
       Dir.chdir(config[:build_dir]) do
-        self.build_output = exec(config[:build_tasks])
+        self.build_output = shell(config[:build_tasks])
       end
       output << '==== Build tasks '.ljust(80,'=') + "\n"
       output << '= ' + config[:build_tasks] + "\n"
@@ -113,7 +113,7 @@ module Scoop
       adapter.update_src
       exit_status, result = nil
       Dir.chdir(config[:source_dir]) do
-        self.deploy_output = exec(config[:deploy_tasks])
+        self.deploy_output = shell(config[:deploy_tasks])
       end
       output << self.deploy_output
       return true
