@@ -4,6 +4,7 @@ describe Scoop do
   attr_accessor :builder
   before do
     @builder = Scoop::Builder.new(conf)
+    Mail::Message.any_instance.stub(:deliver!) {nil}
   end
   it "load config correct" do
     pending
@@ -13,12 +14,10 @@ describe Scoop do
     Foo.new.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
   end
   it "should run build tasks correct" do
-    builder = Scoop::Builder.new(conf)
     builder.run_build_tasks
     builder.build_output.should == "my build tasks\n"
   end
   it "should run deploy tasks correct" do
-    builder = Scoop::Builder.new(conf)
     builder.run_deploy_tasks
     builder.deploy_output.should == "deploy\n"
   end
@@ -60,7 +59,6 @@ describe Scoop do
     builder.expects(:run_build_tasks).once
   end
   it "shouldn't do anything if there's no change" do
-    builder = Scoop::Builder.new(conf)
     adapter = base_adapter
     def adapter.change?
       false
@@ -87,7 +85,7 @@ describe Scoop do
     builder = Scoop::Builder.new(cfg)
     builder.stub(:run_build_tasks) { true }
     builder.stub(:update_src) {nil}
-    builder.stub(:update_src) {email_results}
+    builder.stub(:email_results) {nil}
     builder.run once: true
     builder.deploy_output.should == "fun\n"
   end

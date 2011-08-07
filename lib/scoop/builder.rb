@@ -64,9 +64,7 @@ module Scoop
       # trimmed last commit message in subject
     end
 
-    def email_results
-      debug 'skipping email'
-      return nil
+    def build_email
       debug "emailing results"
 
       settings = config[:email]
@@ -85,9 +83,13 @@ module Scoop
       mail.from settings[:from]
       mail.subject email_subject
       mail.body output
-      mail.deliver!
-      debug "email sent"
+      return mail
     end
+
+    def email_results
+      build_email.deliver!
+    end
+
     def run_build_tasks
       prepare_build
       exit_status, result = nil
