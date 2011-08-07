@@ -27,7 +27,6 @@ module Scoop
         reset # reset all states
         if !adapter.change?
           debug "no change found."
-          sleep config[:poll_interval]
           exit if $term_received
           next
         end
@@ -39,7 +38,7 @@ module Scoop
         end
         adapter.update_src if status == SUCCESS
         email_results
-        sleep 1 # we don't want to eat cpu incase the update is wonky
+        sleep config[:poll_interval]
       end while opts[:once] == false
     end
 
@@ -101,12 +100,11 @@ module Scoop
       output << '= ' + config[:build_tasks] + "\n"
       output << self.build_output
       output << ''.ljust(80,'=') + "\n"
-      if exit_status != 0
+      return true
+      rescue ExecError
         logger.info "build tasks failed"
         self.status = FAILED_BUILD
         return false
-      end
-      return true
     end
 
     def run_deploy_tasks
@@ -116,10 +114,11 @@ module Scoop
         self.deploy_output = exec(config[:deploy_tasks])
       end
       output << self.deploy_output
-      if exit_status != 0
+      return true
+      rescue ExecError
         logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY
-      end
+        return false
     end
   end
 end
