@@ -1,25 +1,16 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe Scoop do
-  attr_accessor :builder
   before do
-    @builder = Scoop::Builder.new(conf)
     Mail::Message.any_instance.stub(:deliver!) {nil}
   end
+  let(:builder) { Scoop::Builder.new(conf) }
   it "load config correct" do
     pending
     class Foo
       include Scoop::Common
     end
     Foo.new.config[:source_dir].must_equal File.join(File.dirname(File.realpath(__FILE__)),'src')
-  end
-  it "should run build tasks correct" do
-    builder.run_build_tasks
-    builder.build_output.should == "my build tasks\n"
-  end
-  it "should run deploy tasks correct" do
-    builder.run_deploy_tasks
-    builder.deploy_output.should == "deploy\n"
   end
   it "should send success email on success" do
     pending
