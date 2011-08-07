@@ -27,8 +27,11 @@ module Scoop
         reset # reset all states
         if !adapter.change?
           debug "no change found."
+          sleep config[:poll_interval]
           exit if $term_received
           next
+        else
+          sleep config[:poll_interval]
         end
         debug "found update."
         if run_build_tasks
@@ -38,7 +41,6 @@ module Scoop
         end
         adapter.update_src if status == SUCCESS
         email_results
-        sleep config[:poll_interval]
       end while opts[:once] == false
     end
 
