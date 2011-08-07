@@ -11,6 +11,9 @@ module GitSpecHelper
   def src_dir
     App.root + '/spec/tmp/src'
   end
+  def build_dir
+    App.root + '/spec/tmp/build'
+  end
   def init_git
     init_git_origin
     init_git_source
@@ -61,5 +64,25 @@ describe Scoop::Adapter::Git do
     GitSpecHelper.mod_git_origin
     adapter.stub(:config) { config }
     adapter.differ?.should == true
+  end
+  context "#update_build" do
+    it "should not have updated build dir" do
+      adapter = Scoop::Adapter::Git.new
+      config = conf.merge source_dir: GitSpecHelper.src_dir
+      GitSpecHelper.mod_git_origin
+      adapter.stub(:config) { config }
+      exec("rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}")
+      adapter.update_build.should == false
+    end
+    it "should update build dir" do
+      adapter = Scoop::Adapter::Git.new
+      config = conf.merge source_dir: GitSpecHelper.src_dir
+      config[:build_dir] = GitSpecHelper.build_dir
+      GitSpecHelper.mod_git_origin
+      adapter.stub(:config) { config }
+      cmd = "rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}"
+      system cmd
+      adapter.update_build.should == true
+    end
   end
 end

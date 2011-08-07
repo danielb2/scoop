@@ -7,8 +7,7 @@ module Scoop
       def update_build
         logger.info 'updating build'
         Dir.chdir config[:build_dir] do
-          # exec("rsync -az --delete #{config[:source_dir]}/ #{config[:build_dir]}")
-          exit_status, result = exec(update_cmd)
+          result = exec(update_cmd)
           return false if result =~ /up-to-date./
         end
         return true
@@ -16,7 +15,7 @@ module Scoop
       def update_src
         logger.info 'updating source'
         Dir.chdir config[:source_dir] do
-          exit_status, result = exec(update_cmd)
+          result = exec(update_cmd)
         end
       end
 
