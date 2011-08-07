@@ -110,15 +110,17 @@ module Scoop
 
     def run_deploy_tasks
       adapter.update_src
-      exit_status, result = nil
+      output << '==== Deploy tasks '.ljust(80,'=') + "\n"
+      output << '= ' + config[:deploy_tasks] + "\n"
       Dir.chdir(config[:source_dir]) do
         self.deploy_output = shell(config[:deploy_tasks])
       end
       output << self.deploy_output
       return true
-      rescue ExecError
-        logger.info "deploy tasks failed"
-        self.status = FAILED_DEPLOY
+      rescue ExecError => e
+        logger.info "build tasks failed"
+        self.status = FAILED_BUILD
+        output << e.output
         return false
     end
   end
