@@ -118,7 +118,7 @@ module Scoop
       output << self.deploy_output
       return true
       rescue ExecError => e
-        logger.info "build tasks failed"
+        logger.info "deploy tasks failed"
         self.status = FAILED_DEPLOY
         output << e.output
         return false

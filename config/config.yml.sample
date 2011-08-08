@@ -11,7 +11,7 @@
 :email:
   :to:
   :from:
-  :subject_prefx: (Scoop)
+  :subject_prefix: (Scoop)
   :smtp:
     :password:
     :account:
