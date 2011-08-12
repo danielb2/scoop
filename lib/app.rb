@@ -1,8 +1,9 @@
 class App
-  cattr_accessor :logger, :cfg_file, :conf, :debug, :no_mail, :force, :once
+  cattr_accessor :logger, :cfg_file, :conf, :debug, :no_mail, :force, :once, :test_notify
   @@debug = false
   @@no_mail = false
   @@once = false
+  @@test_notify = false
   class << self
     def root
       File.realpath("#{File.dirname(__FILE__)}/..")

@@ -53,11 +53,18 @@ parser.on("-d", "--debug", "debug mode.") do
   App.no_mail       = true
   puts "debug mode active".yellow
 end
+parser.on("-T", "--test-notify", "send a sample notify") do |opt|
+  App.test_notify = true
+end
 parser.parse!
 
 unless App.cfg_file
   puts parser.help
   abort "need to specify config file".red
+end
+if App.test_notify
+  Scoop::Builder.new(App.conf).test_notify
+  exit
 end
 
 Scoop::Builder.new(App.conf).run

@@ -39,13 +39,41 @@ module Scoop
         else
         end
         adapter.update_src if status == SUCCESS
-        email_results
+        notify
         sleep config[:poll_interval]
       end while App.once != true
     end
 
     def debug(str)
       logger.debug str if Scoop[:debug]
+    end
+
+    # TODO: should extract this so custom notifies could also be made
+    def notify
+      return unless config[:notification].is_a? Array
+      email_results if config[:notification].include? 'email'
+      notify_jaconda if config[:notification].include? 'jaconda'
+    end
+    def test_notify
+      status = SUCCESS
+      notify_jaconda
+    end
+
+    def notify_jaconda
+      Jaconda::Notification.authenticate(:subdomain => config[:jaconda][:subdomain],
+                                         :room_id => config[:jaconda][:room_id],
+                                         :room_token => config[:jaconda][:room_token])
+
+      Jaconda::Notification.notify(:text => "(<b>#{config[:application]}</b>): deploy status: <i>#{status_map[status]}</i>",
+                                          :sender_name => "scoop")
+    end
+
+    def status_map
+      {
+        SUCCESS => 'Success',
+        FAILED_BUILD => 'Failed Build',
+        FAILED_DEPLOY => 'Failed Deploy',
+      }
     end
 
     def email_subject

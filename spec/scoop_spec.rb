@@ -82,4 +82,5 @@ describe Scoop do
     builder.deploy_output.should == "fun\n"
   end
   it "should not retry a build. if it fails, stop trying until it passes"
+  it "should not pull from source again when the deploy tasks are done"
 end

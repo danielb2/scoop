@@ -10,5 +10,6 @@ require 'net/smtp'
 require 'mail'
 require 'cattr'
 require 'open3'
+require 'jaconda'
 
 require 'app'
