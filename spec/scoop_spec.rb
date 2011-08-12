@@ -81,6 +81,22 @@ describe Scoop do
     builder.run
     builder.deploy_output.should == "fun\n"
   end
-  it "should not retry a build. if it fails, stop trying until it passes"
+  it "should not retry a build. if it fails, stop trying until it passes" do
+    class Scoop::Adapter::Mock < Scoop::Adapter::Base
+      def local_revision
+      'abc'
+      end
+      def remote_revision
+      'ccd'
+      end
+    end
+    adapter = Scoop::Adapter::Mock.new
+    adapter.differ?.should == true
+    adapter.differ?.should == false
+    def adapter.remote_revision
+      'qqq'
+    end
+    adapter.differ?.should == true
+  end
   it "should not pull from source again when the deploy tasks are done"
 end
