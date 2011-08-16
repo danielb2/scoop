@@ -99,4 +99,5 @@ describe Scoop do
     adapter.differ?.should == true
   end
   it "should not pull from source again when the deploy tasks are done"
+  it "should retry after X seconds if the failure is connection issue with repo"
 end
