@@ -63,7 +63,7 @@ module Scoop
 
       ENV['GITHUB_USER'] = config[:gist][:github_user]
       ENV['GITHUB_TOKEN'] = config[:gist][:github_token]
-      @gist_url = Gist.write([{input: output, filename: 'input.txt', extension: 'txt'}], true)
+      @gist_url = Gist.write([{input: output, filename: 'scoop.txt', extension: 'txt'}], true)
     end
 
     def test_notify
