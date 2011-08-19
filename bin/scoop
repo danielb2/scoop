@@ -50,7 +50,6 @@ parser.on("-d", "--debug", "debug mode.") do
   Scoop[:daemonize] = false
   Scoop[:no_loop]   = true
   Scoop[:debug]     = true
-  App.no_mail       = true
   puts "debug mode active".yellow
 end
 parser.on("-T", "--test-notify", "send a sample notify") do |opt|
