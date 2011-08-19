@@ -25,7 +25,7 @@ module Scoop
     def run
       begin
         reset # reset all states
-        debug "Checking for: #{config[:appication]}"
+        debug "Checking for: #{config[:application]}"
         if !adapter.change?
           debug "no change found."
           sleep config[:poll_interval]
