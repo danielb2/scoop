@@ -24,3 +24,6 @@
   :subdomain:
   :room_id:
   :room_token:
+:gist:
+  :github_user:
+  :github_token:
