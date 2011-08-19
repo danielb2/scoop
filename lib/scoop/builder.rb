@@ -13,8 +13,9 @@ module Scoop
     end
 
     def reset
-      @status = SUCCESS
-      @output = ''
+      @status   = SUCCESS
+      @output   = ''
+      @gist_url = nil
     end
 
     def prepare_build
@@ -55,8 +56,19 @@ module Scoop
       email_results if config[:notification].include? 'email'
       notify_jaconda if config[:notification].include? 'jaconda'
     end
+
+    def gist_post
+      return @gist_url if @gist_url
+      return unless config[:gist] and config[:gist][:github_user] and config[:gist][:github_token]
+
+      ENV['GITHUB_USER'] = config[:gist][:github_user]
+      ENV['GITHUB_TOKEN'] = config[:gist][:github_token]
+      @gist_url = Gist.write([{input: output, filename: 'input.txt', extension: 'txt'}], true)
+    end
+
     def test_notify
       status = SUCCESS
+      self.output = 'test notify'
       notify
     end
 
@@ -65,8 +77,9 @@ module Scoop
                                          :room_id => config[:jaconda][:room_id],
                                          :room_token => config[:jaconda][:room_token])
 
-      Jaconda::Notification.notify(:text => "(<b>#{config[:application]}</b>): deploy status: <i>#{status_map[status]}</i>",
-                                          :sender_name => "scoop")
+      text= "(<b>#{config[:application]}</b>): deploy status: <i>#{status_map[status]}</i>"
+      text += " (#{gist_post})" if gist_post
+      Jaconda::Notification.notify(:text => text, :sender_name => "scoop")
     end
 
     def status_map
@@ -112,7 +125,7 @@ module Scoop
       mail.to settings[:to]
       mail.from settings[:from]
       mail.subject email_subject
-      mail.body output
+      mail.body gist_post ? gist_post : output
       return mail
     end
 

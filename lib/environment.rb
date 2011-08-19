@@ -11,5 +11,6 @@ require 'mail'
 require 'cattr'
 require 'open3'
 require 'jaconda'
+require 'gist'
 
 require 'app'

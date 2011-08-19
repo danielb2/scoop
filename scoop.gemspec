@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "cattr"
   s.add_dependency "awesome_print"
   s.add_dependency "jaconda"
+  s.add_dependency "gist"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
