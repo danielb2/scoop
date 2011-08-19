@@ -57,7 +57,7 @@ module Scoop
     end
     def test_notify
       status = SUCCESS
-      notify_jaconda
+      notify
     end
 
     def notify_jaconda
