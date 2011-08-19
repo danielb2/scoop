@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scoop (0.0.1)
+    scoop (0.0.3)
       awesome_print
       cattr
       jaconda

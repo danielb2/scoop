@@ -8,7 +8,7 @@ module Scoop
         return true if App.force
         return false if remote_revision == @last_tried
         @last_tried = remote_revision
-        local_revision != @remote_revision
+        local_revision != @last_tried
       end
       alias :change? :differ?
 
