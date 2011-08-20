@@ -100,4 +100,5 @@ describe Scoop do
   end
   it "should not pull from source again when the deploy tasks are done"
   it "should retry after X seconds if the failure is connection issue with repo"
+  it "should not use gist if gist is not all filled in from template"
 end
