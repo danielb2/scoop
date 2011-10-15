@@ -1,3 +1,4 @@
+require 'scoop/version'
 require 'yaml'
 require 'pathname'
 require 'scoop/common'

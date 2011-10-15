@@ -26,6 +26,10 @@ end
 parser.on("-o", "--once", "Loop once") do |opt|
   App.once = true
 end
+parser.on("-v", "--version", "display version info") do |opt|
+  puts Scoop::VERSION
+  exit(0)
+end
 parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|
   App.cfg_file = opt
   App.load_conf opt
