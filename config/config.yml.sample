@@ -3,6 +3,7 @@
 :git:
   :branch: master
   :remote: origin
+  :reset_local: true
 :source_dir: <%= Dir.pwd %>/src
 :build_dir: <%=root%>/build
 :build_tasks: echo my build tasks

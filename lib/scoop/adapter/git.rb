@@ -39,7 +39,9 @@ module Scoop
       end
 
       def update_cmd
-        %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
+        cmd = ''
+        cmd += %|git reset --hard && | if config[:git][:reset_local] == true
+        cmd += %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
       end
     end
   end
