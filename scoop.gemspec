@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name        = "scoop"
   s.version     = Scoop::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = []
-  s.email       = []
+  s.authors     = ['Daniel Bretoi']
+  s.email       = ['daniel@bretoi.com']
   s.homepage    = "http://rubygems.org/gems/scoop"
   s.summary     = ": Write a gem summary"
   s.description = ": Write a gem description"
