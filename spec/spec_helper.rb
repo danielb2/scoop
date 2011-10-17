@@ -9,6 +9,7 @@ require 'awesome_print'
 require "rspec/mocks/standalone"
 require 'pry'
 require 'fileutils'
+App.silent = true
 
 def conf
   root = Scoop.root
