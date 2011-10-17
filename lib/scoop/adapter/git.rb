@@ -12,9 +12,9 @@ module Scoop
         super
         Dir.chdir config[:build_dir] do
           result = shell(update_cmd)
-          return false if result =~ /up-to-date./
           self.committer = shell(committer_cmd).chomp
           self.revision = shell(revision_cmd).chomp
+          return false if result =~ /up-to-date./
         end
         return true
       end
