@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Daniel Bretoi']
   s.email       = ['daniel@bretoi.com']
-  s.homepage    = "http://rubygems.org/gems/scoop"
-  s.summary     = ": Write a gem summary"
-  s.description = ": Write a gem description"
+  s.homepage    = "https://github.com/danielb2/scoop"
+  s.summary     = "A small, easy deployment tool."
+  s.description = "A small easy continous deployment tool. You commit, it deploys."
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "scoop"
