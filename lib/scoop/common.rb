@@ -22,12 +22,12 @@ module Scoop
     def shell(cmd)
       result = ''
       process_status = nil
-      puts cmd
+      puts cmd unless App.silent == true
       Open3.popen3("#{cmd} 2>&1") do |stdin, stdout, stderr, wait_thr|
         begin
           while line = stdout.sysread(15)
             result += line
-            print line
+            print line unless App.silent == true
           end
         rescue EOFError
         end

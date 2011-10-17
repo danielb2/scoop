@@ -1,5 +1,6 @@
 class App
-  cattr_accessor :logger, :cfg_file, :conf, :debug, :no_mail, :force, :once, :test_notify
+  cattr_accessor :logger, :cfg_file, :conf, :debug, :no_mail, :force, :once, :test_notify, :silent
+  @@silent = false
   @@debug = false
   @@no_mail = false
   @@once = false

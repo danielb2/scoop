@@ -23,6 +23,7 @@ module GitSpecHelper
     FileUtils.mkdir_p origin_dir
     Dir.chdir origin_dir do
       exec "git init"
+      exec "git config user.name peter_bishop"
       exec "date > file.txt"
       exec "git add file.txt"
       exec "git commit -m 'first file'"
@@ -84,6 +85,18 @@ describe Scoop::Adapter::Git do
       cmd = "rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}"
       system cmd
       adapter.update_build.should == true
+    end
+    it "should record committer" do
+      App.silent = true
+      adapter = Scoop::Adapter::Git.new
+      config = conf.merge source_dir: GitSpecHelper.src_dir
+      config[:build_dir] = GitSpecHelper.build_dir
+      GitSpecHelper.mod_git_origin
+      adapter.stub(:config) { config }
+      cmd = "rsync --delete -az #{config[:source_dir]}/ #{config[:build_dir]}"
+      system cmd
+      adapter.update_build.should == true
+      adapter.committer.should == 'peter_bishop'
     end
   end
 end

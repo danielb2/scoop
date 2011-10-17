@@ -77,7 +77,7 @@ module Scoop
                                          :room_id => config[:jaconda][:room_id],
                                          :room_token => config[:jaconda][:room_token])
 
-      text= "(<b>#{config[:application]}</b>): deploy status: <i>#{status_map[status]}</i>"
+      text= "(<b>#{config[:application]}</b>) [#{adapter.committer}]: deploy status: <i>#{status_map[status]}</i>"
       text += " (#{gist_post})" if gist_post
       Jaconda::Notification.notify(:text => text, :sender_name => "scoop")
     end
@@ -136,6 +136,11 @@ module Scoop
 
     def run_build_tasks
       prepare_build
+      output << '---- Details '.ljust(80,'-') + "\n"
+      output << "| Project: #{config[:application]}\n"
+      output << "| Committer: #{adapter.committer}\n"
+      output << "| Revision: #{adapter.revision}\n"
+      output << '==== Build tasks '.ljust(80,'=') + "\n"
       output << '==== Build tasks '.ljust(80,'=') + "\n"
       output << '= ' + config[:build_tasks] + "\n"
       Dir.chdir(config[:build_dir]) do
