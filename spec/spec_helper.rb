@@ -16,6 +16,7 @@ def conf
   config_file = (Scoop.root + 'config/config.yml.sample').to_s
   conf = YAML::load(ERB.new( IO.read( config_file ) ).result(binding) )
   conf[:poll_interval] = 0.01
+  conf[:git][:reset_local] = false # we reset scoop changes otherwise.
   conf
 end
 
