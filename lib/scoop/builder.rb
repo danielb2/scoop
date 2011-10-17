@@ -136,8 +136,8 @@ module Scoop
 
     def header_output
       header = []
-      header << '---- Details '.ljust(80,'-')
-      header << "|"
+      header << ' --- Details '.ljust(80,'-')
+      header << "/"
       header << "| Project: #{config[:application]}"
       header << "| Committer: #{adapter.committer}"
       header << "| Revision: #{adapter.revision}"
