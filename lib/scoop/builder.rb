@@ -151,7 +151,6 @@ module Scoop
     def run_build_tasks
       prepare_build
       output << '==== Build tasks '.ljust(80,'=')
-      output << '==== Build tasks '.ljust(80,'=')
       output << '= ' + config[:build_tasks]
       Dir.chdir(config[:build_dir]) do
         self.build_output = shell(config[:build_tasks])
