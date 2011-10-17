@@ -10,6 +10,10 @@ describe Scoop::Builder do
       builder.run_build_tasks
       builder.build_output.should == "my build tasks\n"
     end
+    it "should have right header output" do
+      builder.run_build_tasks
+      builder.output_str.should =~ /Project: Scoop/
+    end
   end
 
   context "#run_deploy_tasks" do

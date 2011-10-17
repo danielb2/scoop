@@ -14,7 +14,7 @@ module Scoop
 
     def reset
       @status   = SUCCESS
-      @output   = ''
+      @output   = []
       @gist_url = nil
     end
 
@@ -63,12 +63,12 @@ module Scoop
 
       ENV['GITHUB_USER'] = config[:gist][:github_user]
       ENV['GITHUB_TOKEN'] = config[:gist][:github_token]
-      @gist_url = Gist.write([{input: output, filename: 'scoop.txt', extension: 'txt'}], true)
+      @gist_url = Gist.write([{input: output_str, filename: 'scoop.txt', extension: 'txt'}], true)
     end
 
     def test_notify
       status = SUCCESS
-      self.output = 'test notify'
+      self.output = ['test notify']
       notify
     end
 
@@ -134,15 +134,25 @@ module Scoop
       build_email.deliver!
     end
 
+    def header_output
+      header = []
+      header << '---- Details '.ljust(80,'-')
+      header << "|"
+      header << "| Project: #{config[:application]}"
+      header << "| Committer: #{adapter.committer}"
+      header << "| Revision: #{adapter.revision}"
+      header << "|"
+    end
+
+    def output_str
+      (header_output + output).join("\n")
+    end
+
     def run_build_tasks
       prepare_build
-      output << '---- Details '.ljust(80,'-') + "\n"
-      output << "| Project: #{config[:application]}\n"
-      output << "| Committer: #{adapter.committer}\n"
-      output << "| Revision: #{adapter.revision}\n"
-      output << '==== Build tasks '.ljust(80,'=') + "\n"
-      output << '==== Build tasks '.ljust(80,'=') + "\n"
-      output << '= ' + config[:build_tasks] + "\n"
+      output << '==== Build tasks '.ljust(80,'=')
+      output << '==== Build tasks '.ljust(80,'=')
+      output << '= ' + config[:build_tasks]
       Dir.chdir(config[:build_dir]) do
         self.build_output = shell(config[:build_tasks])
       end
@@ -157,8 +167,8 @@ module Scoop
 
     def run_deploy_tasks
       adapter.update_src
-      output << '==== Deploy tasks '.ljust(80,'=') + "\n"
-      output << '= ' + config[:deploy_tasks] + "\n"
+      output << '==== Deploy tasks '.ljust(80,'=')
+      output << '= ' + config[:deploy_tasks]
       Dir.chdir(config[:source_dir]) do
         self.deploy_output = shell(config[:deploy_tasks])
       end

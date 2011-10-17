@@ -3,6 +3,11 @@ module Scoop
     class Base
       include Common
       attr_accessor :last_tried
+      attr_accessor :committer, :revision
+      def initialize
+        @committer = 'unknown'
+        @revision  = 'unknown'
+      end
 
       def differ?
         return true if App.force
@@ -18,6 +23,14 @@ module Scoop
       end
       def remote_revision
         raise "must implement for adapter"
+      end
+      def update_build
+        logger.info 'updating build'
+        @committer = 'unknown'
+        @revision = 'unknown'
+      end
+      def update_src
+        logger.info 'updating source'
       end
     end
   end

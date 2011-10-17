@@ -1,4 +1,4 @@
-:appllication: Scoop
+:application: Scoop
 :adapter: git
 :git:
   :branch: master

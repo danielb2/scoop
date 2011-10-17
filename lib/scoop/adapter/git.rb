@@ -2,7 +2,6 @@ require_relative 'base'
 module Scoop
   module Adapter
     class Git < Base
-      attr_accessor :committer, :revision
       def committer_cmd
         %{git log --format="%cn" | head -1}
       end
@@ -10,7 +9,7 @@ module Scoop
         %{git log --format="%h" | head -1}
       end
       def update_build
-        logger.info 'updating build'
+        super
         Dir.chdir config[:build_dir] do
           result = shell(update_cmd)
           return false if result =~ /up-to-date./
@@ -20,7 +19,7 @@ module Scoop
         return true
       end
       def update_src
-        logger.info 'updating source'
+        super
         Dir.chdir config[:source_dir] do
           result = shell(update_cmd)
         end
