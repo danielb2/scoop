@@ -1,3 +1,4 @@
+---
 :application: Scoop
 :adapter: git
 :git:
@@ -5,10 +6,10 @@
   :remote: origin
   :reset_local: true
 :source_dir: <%= Dir.pwd %>/src
-:build_dir: <%=root%>/build
+:build_dir: <%=Dir.pwd%>/build
 :build_tasks: echo my build tasks
 :deploy_tasks: echo deploy
-:logfile: <%=root%>//scoop.log
+:logfile: <%=Dir.pwd%>/scoop.log
 :poll_interval: 5
 :notification:
 :email:

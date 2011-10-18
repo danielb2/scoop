@@ -34,8 +34,8 @@ parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop
   App.cfg_file = opt
   App.load_conf opt
 end
-parser.on("-C", "--create", "Create config file ready to use") do |opt|
-  Scoop.create_config
+parser.on("-G", "--generate", "Generate sample config file") do |opt|
+  Scoop.generate_config
   exit
 end
 # parser.on("-p", "--poll_interval INT", "How frequrnt to poll the repo for changes. Default: #{Scoop[:poll_interval]}") do |opt|

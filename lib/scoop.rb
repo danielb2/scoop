@@ -16,9 +16,8 @@ module Scoop
     def root
       Pathname.new File.realpath(File.join(File.dirname(__FILE__),'..'))
     end
-    def create_config
-      self[:config_file] = ( root + 'config/config.yml.sample' ).to_s
-      puts config.to_yaml
+    def generate_config
+      puts ERB.new(IO.read(( root + 'config/config.yml.sample' ).to_s)).result(binding)
     end
 
   end
