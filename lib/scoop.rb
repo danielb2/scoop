@@ -1,3 +1,20 @@
+require 'scoop/version'
+require 'yaml'
+require 'pathname'
+require 'scoop/common'
+require 'scoop'
+require 'erb'
+require 'optparse'
+require 'logger'
+require 'awesome_print'
+require 'net/smtp'
+require 'mail'
+require 'cattr'
+require 'open3'
+require 'jaconda'
+require 'gist'
+
+require 'scoop/app'
 require 'scoop/builder'
 require 'scoop/adapter/git' # TODO this should really be autoload. 
 module Scoop

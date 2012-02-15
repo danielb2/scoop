@@ -4,8 +4,7 @@ SimpleCov.start do
     source_file.filename =~ /spec/
   end
 end
-require 'scoop/environment'
-require 'awesome_print'
+require 'scoop'
 require "rspec/mocks/standalone"
 require 'pry'
 require 'fileutils'
