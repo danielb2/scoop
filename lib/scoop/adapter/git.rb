@@ -48,7 +48,7 @@ module Scoop
         cmd = ''
         cmd += %|git reset --hard && | if config[:git][:reset_local] == true
         cmd += %|git pull #{config[:git][:remote]} #{config[:git][:branch]}|
-        cmd += %| && git co #{config[:git][:branch]}|
+        cmd += %| && git checkout #{config[:git][:branch]}|
       end
     end
   end
