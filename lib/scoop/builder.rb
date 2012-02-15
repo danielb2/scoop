@@ -158,7 +158,7 @@ module Scoop
       output << self.build_output
       return true
       rescue ExecError => e
-        logger.info "build tasks failed"
+        logger.info "#{e.message}: build tasks failed".red
         self.status = FAILED_BUILD
         output << e.output
         return false
