@@ -6,13 +6,13 @@ module GitSpecHelper
   extend self
 
   def origin_dir
-    App.root + '/spec/tmp/origin'
+    Scoop::App.root + '/spec/tmp/origin'
   end
   def src_dir
-    App.root + '/spec/tmp/src'
+    Scoop::App.root + '/spec/tmp/src'
   end
   def build_dir
-    App.root + '/spec/tmp/build'
+    Scoop::App.root + '/spec/tmp/build'
   end
   def init_git
     init_git_origin
@@ -31,7 +31,7 @@ module GitSpecHelper
   end
 
   def init_git_source
-    dir = App.root + '/spec/tmp'
+    dir = Scoop::App.root + '/spec/tmp'
     Dir.chdir dir do
       exec "git clone #{origin_dir} #{src_dir}"
     end
@@ -87,7 +87,7 @@ describe Scoop::Adapter::Git do
       adapter.update_build.should == true
     end
     it "should record committer" do
-      App.silent = true
+      Scoop::App.silent = true
       adapter = Scoop::Adapter::Git.new
       config = conf.merge source_dir: GitSpecHelper.src_dir
       config[:build_dir] = GitSpecHelper.build_dir

@@ -4,12 +4,12 @@ SimpleCov.start do
     source_file.filename =~ /spec/
   end
 end
-require 'environment'
+require 'scoop/environment'
 require 'awesome_print'
 require "rspec/mocks/standalone"
 require 'pry'
 require 'fileutils'
-App.silent = true
+Scoop::App.silent = true
 
 def conf
   root = Scoop.root
@@ -21,5 +21,5 @@ def conf
 end
 
 def clean_tmp
-  FileUtils.rm_rf App.root + '/spec/tmp'
+  FileUtils.rm_rf Scoop::App.root + '/spec/tmp'
 end

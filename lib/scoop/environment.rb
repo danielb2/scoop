@@ -14,4 +14,4 @@ require 'open3'
 require 'jaconda'
 require 'gist'
 
-require 'app'
+require 'scoop/app'

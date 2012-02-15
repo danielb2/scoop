@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Scoop do
   before do
     Mail::Message.any_instance.stub(:deliver!) {nil}
-    App.once = true
+    Scoop::App.once = true
   end
   let(:builder) { Scoop::Builder.new(conf) }
   it "load config correct" do
