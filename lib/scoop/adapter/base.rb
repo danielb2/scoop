@@ -12,7 +12,9 @@ module Scoop
       def differ?
         return true if App.force
         @remote_revision = remote_revision
+        debug "last_tried: #{@last_tried[0..6] if @last_tried} remote: #{@remote_revision[0..6]}"
         return false if @remote_revision == @last_tried
+        return false if @remote_revision.nil? or @remote_revision.empty?
         @last_tried = @remote_revision
         local_revision != @remote_revision
       end

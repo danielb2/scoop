@@ -22,10 +22,10 @@ module Scoop
     def shell(cmd)
       result = ''
       process_status = nil
-      puts cmd unless App.silent == true
+      puts "==> #{cmd}" unless App.silent == true
       Open3.popen3("#{cmd} 2>&1") do |stdin, stdout, stderr, wait_thr|
         begin
-          while line = stdout.sysread(15)
+          while line = stdout.sysread(32)
             result += line
             print line unless App.silent == true
           end
