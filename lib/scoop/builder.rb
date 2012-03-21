@@ -64,14 +64,20 @@ module Scoop
     end
 
     def gist_post
-      return @gist_url if @gist_url
+      return @gist_url if @gist_url or @gist_tried
       return unless config[:gist]
-      abort "Please set gist.github_password instead of using gist.github_token in config file." if  config[:gist][:github_token]
+      if config[:gist][:github_token]
+        $stdout.puts "Please set gist.github_password instead of using gist.github_token in config file."
+      end
+
       return unless config[:gist][:github_user] and config[:gist][:github_password]
 
       ENV['GITHUB_USER'] = config[:gist][:github_user]
       ENV['GITHUB_PASSWORD'] = config[:gist][:github_password]
       @gist_url = Gist.write([{input: output_str, filename: 'scoop.txt', extension: 'txt'}], true)
+      rescue Exception
+        @gist_tried = true
+        return nil
     end
 
     def test_notify
