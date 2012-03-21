@@ -22,6 +22,9 @@ describe Scoop do
   it "should send fail email on deploy fail" do
     pending
   end
+  it "should not include gist link if gist auth fails" do
+  end
+  it "should include output in body and warning abotu gist failing if gist fails"
   it "should send fail if version control to pull fails" do
     pending
     # example, do git pull origin nonexistentrepo

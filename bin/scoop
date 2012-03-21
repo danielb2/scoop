@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 $: << File.join(File.dirname(__FILE__),'..','lib')
-require 'environment'
+require 'scoop'
 
 Signal.trap("INT") { signal_trap }
 $trap_time = Time.now
@@ -14,25 +14,24 @@ def signal_trap
   $term_received = true
 end
 
-
 parser = OptionParser.new
 parser.banner = 'Usage: scoop [options]'
 parser.on("--no-mail", "Don't send mail") do |opt|
-  App.no_mail = true
+  Scoop::App.no_mail = true
 end
 parser.on("--force", "Forces build for first run") do |opt|
-  App.force = true
+  Scoop::App.force = true
 end
 parser.on("-o", "--once", "Loop once") do |opt|
-  App.once = true
+  Scoop::App.once = true
 end
 parser.on("-v", "--version", "display version info") do |opt|
   puts Scoop::VERSION
   exit(0)
 end
 parser.on("-c", "--config=config.yml", "The config file to use. Default: #{Scoop[:config_file]}") do |opt|
-  App.cfg_file = opt
-  App.load_conf opt
+  Scoop::App.cfg_file = opt
+  Scoop::App.load_conf opt
 end
 parser.on("-G", "--generate", "Generate sample config file") do |opt|
   Scoop.generate_config
@@ -57,17 +56,17 @@ parser.on("-d", "--debug", "debug mode.") do
   puts "debug mode active".yellow
 end
 parser.on("-T", "--test-notify", "send a sample notify") do |opt|
-  App.test_notify = true
+  Scoop::App.test_notify = true
 end
 parser.parse!
 
-unless App.cfg_file
+unless Scoop::App.cfg_file
   puts parser.help
   abort "need to specify config file".red
 end
-if App.test_notify
-  Scoop::Builder.new(App.conf).test_notify
+if Scoop::App.test_notify
+  Scoop::Builder.new(Scoop::App.conf).test_notify
   exit
 end
 
-Scoop::Builder.new(App.conf).run
+Scoop::Builder.new(Scoop::App.conf).run

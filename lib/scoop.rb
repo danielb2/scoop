@@ -13,6 +13,7 @@ require 'cattr'
 require 'open3'
 require 'jaconda'
 require 'gist'
+require 'pastie-api'
 
 require 'scoop/app'
 require 'scoop/builder'

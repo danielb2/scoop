@@ -57,10 +57,17 @@ module Scoop
       notify_jaconda if config[:notification].include? 'jaconda'
     end
 
+    def pastie_post
+      return @pastie_url if @pastie_url
+      pastie = Pastie.create(output_str)
+      @pastie_url = pastie.link
+    end
+
     def gist_post
       return @gist_url if @gist_url
+      return unless config[:gist]
       abort "Please set gist.github_password instead of using gist.github_token in config file." if  config[:gist][:github_token]
-      return unless config[:gist] and config[:gist][:github_user] and config[:gist][:github_password]
+      return unless config[:gist][:github_user] and config[:gist][:github_password]
 
       ENV['GITHUB_USER'] = config[:gist][:github_user]
       ENV['GITHUB_PASSWORD'] = config[:gist][:github_password]
@@ -80,6 +87,7 @@ module Scoop
 
       text= "(<b>#{config[:application]}</b>) [#{adapter.committer}]: deploy status: <i>#{status_map[status]}</i>"
       text += " (#{gist_post})" if gist_post
+      text += " (#{pastie_post})" unless gist_post
       Jaconda::Notification.notify(:text => text, :sender_name => "scoop")
     end
 
@@ -137,12 +145,12 @@ module Scoop
 
     def header_output
       header = []
-      header << ' --- Details '.ljust(80,'-')
-      header << "/"
-      header << "| Project: #{config[:application]}"
-      header << "| Committer: #{adapter.committer}"
-      header << "| Revision: #{adapter.revision}"
-      header << "|"
+      header << '## Details '.ljust(80,'#')
+      header << "#"
+      header << "# Project: #{config[:application]}"
+      header << "# Committer: #{adapter.committer}"
+      header << "# Revision: #{adapter.revision}"
+      header << "#"
     end
 
     def output_str
@@ -151,8 +159,8 @@ module Scoop
 
     def run_build_tasks
       prepare_build
-      output << '==== Build tasks '.ljust(80,'=')
-      output << '= ' + config[:build_tasks]
+      output << '## Build tasks '.ljust(80,'#')
+      output << '# ' + config[:build_tasks]
       Dir.chdir(config[:build_dir]) do
         self.build_output = shell(config[:build_tasks])
       end
@@ -167,8 +175,8 @@ module Scoop
 
     def run_deploy_tasks
       adapter.update_src
-      output << '==== Deploy tasks '.ljust(80,'=')
-      output << '= ' + config[:deploy_tasks]
+      output << '## Deploy tasks '.ljust(80,'#')
+      output << '# ' + config[:deploy_tasks]
       Dir.chdir(config[:source_dir]) do
         self.deploy_output = shell(config[:deploy_tasks])
       end
