@@ -14,6 +14,15 @@ describe Scoop::Builder do
       builder.run_build_tasks
       builder.output_str.should =~ /Project: Scoop/
     end
+    it "should have the right status" do
+      builder.run_build_tasks
+      builder.status.should == Scoop::Builder::SUCCESS
+    end
+    it "should have failed build status on fail" do
+      builder = Scoop::Builder.new(conf.merge(:build_tasks => 'ls sodncosdc'))
+      builder.run_build_tasks
+      builder.status.should == Scoop::Builder::FAILED_BUILD
+    end
   end
 
   context "#run_deploy_tasks" do
@@ -21,7 +30,14 @@ describe Scoop::Builder do
       builder.run_deploy_tasks
       builder.deploy_output.should == "deploy\n"
     end
+    it "should have the right status" do
+      builder.run_deploy_tasks
+      builder.status.should == Scoop::Builder::SUCCESS
+    end
+    it "should have failed deploy status on fail" do
+      builder = Scoop::Builder.new(conf.merge(:deploy_tasks => 'ls sodncosdc'))
+      builder.run_deploy_tasks
+      builder.status.should == Scoop::Builder::FAILED_DEPLOY
+    end
   end
-
-  it "should include build message for failed build"
 end

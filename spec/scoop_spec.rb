@@ -51,7 +51,7 @@ describe Scoop do
     builder = Scoop::Builder.new(conf)
     builder.adapter = base_adapter
     builder.run
-    builder.expects(:run_build_tasks).unce
+    builder.expects(:run_build_tasks).once
   end
   it "shouldn't do anything if there's no change" do
     adapter = base_adapter
