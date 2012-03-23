@@ -13,9 +13,10 @@ module Scoop
     end
 
     def reset
-      @status   = SUCCESS
-      @output   = []
-      @gist_url = nil
+      @status     = SUCCESS
+      @output     = []
+      @gist_url   = nil
+      @pastie_url = nil
     end
 
     def prepare_build
