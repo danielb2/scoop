@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "jaconda"
   s.add_dependency "gist"
   s.add_dependency "pastie-api"
+  s.add_dependency "jira-api"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
