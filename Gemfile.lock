@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    scoop (0.2.3.3)
+    scoop (0.2.3.4)
       awesome_print
       cattr
       gist

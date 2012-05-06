@@ -158,8 +158,8 @@ module Scoop
       mail = Mail.new
       mail.to settings[:to]
       mail.from settings[:from]
-      mail.subject email_subject
-      mail.body gist_post ? gist_post : output
+      mail.subject output_title
+      mail.body output_str 
       return mail
     end
 
