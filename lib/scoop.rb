@@ -14,6 +14,7 @@ require 'open3'
 require 'jaconda'
 require 'gist'
 require 'pastie-api'
+require 'jira-api'
 
 require 'scoop/app'
 require 'scoop/builder'
