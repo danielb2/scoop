@@ -5,3 +5,4 @@ config/config.yml
 tmp
 scoop.log
 coverage
+.rcs
