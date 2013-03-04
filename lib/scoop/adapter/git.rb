@@ -39,7 +39,7 @@ module Scoop
         Dir.chdir config[:source_dir] do
           # cmd = %{git show HEAD --pretty='%H' | head -1}
           # cmd = %{git rev-list HEAD | head -1}
-          cmd = %{git rev-list HEAD --max-count 1}
+          cmd = %{git rev-list HEAD --max-count=1}
           shell(cmd).chomp
         end
       end
